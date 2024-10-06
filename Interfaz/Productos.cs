@@ -16,5 +16,10 @@ namespace Interfaz
         {
             InitializeComponent();
         }
+
+        private void Productos_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

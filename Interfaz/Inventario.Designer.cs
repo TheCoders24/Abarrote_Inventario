@@ -49,6 +49,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Inventario";
             this.Text = "Inventario";
+            this.Load += new System.EventHandler(this.Inventario_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
