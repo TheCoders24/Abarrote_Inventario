@@ -10,16 +10,11 @@ using System.Windows.Forms;
 
 namespace Interfaz
 {
-    public partial class Proveedor : Form
+    public partial class Venta : Form
     {
-        public Proveedor()
+        public Venta()
         {
             InitializeComponent();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
