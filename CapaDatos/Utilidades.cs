@@ -9,7 +9,7 @@ namespace CapaDatos
 {
     public class Utilidades
     {
-        private static SqlConnection connection;
+        public static SqlConnection connection;
 
         public Utilidades() 
         {
