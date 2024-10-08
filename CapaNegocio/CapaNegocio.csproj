@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="NCliente.cs" />
     <Compile Include="NLogin.cs" />
+    <Compile Include="NProveedores.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
