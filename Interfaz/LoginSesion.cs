@@ -35,6 +35,8 @@ namespace Interfaz
                 if (loginExitoso)
                 {
                     MessageBox.Show("Login Exitoso");
+                    MenuPrincipal frm = new MenuPrincipal();
+                    frm.Show();
                 }
                 else
                 {
