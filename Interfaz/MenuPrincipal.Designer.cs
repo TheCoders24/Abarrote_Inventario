@@ -43,6 +43,7 @@
             this.btnproductos.TabIndex = 0;
             this.btnproductos.Text = "Productos";
             this.btnproductos.UseVisualStyleBackColor = true;
+            this.btnproductos.Click += new System.EventHandler(this.btnproductos_Click);
             // 
             // btnproveedores
             // 
@@ -53,6 +54,7 @@
             this.btnproveedores.TabIndex = 1;
             this.btnproveedores.Text = "Proveedores";
             this.btnproveedores.UseVisualStyleBackColor = true;
+            this.btnproveedores.Click += new System.EventHandler(this.btnproveedores_Click);
             // 
             // btnclientes
             // 
@@ -63,6 +65,7 @@
             this.btnclientes.TabIndex = 2;
             this.btnclientes.Text = "Clientes";
             this.btnclientes.UseVisualStyleBackColor = true;
+            this.btnclientes.Click += new System.EventHandler(this.btnclientes_Click);
             // 
             // btndetallesventas
             // 
@@ -73,6 +76,7 @@
             this.btndetallesventas.TabIndex = 3;
             this.btndetallesventas.Text = "DetallesVentas";
             this.btndetallesventas.UseVisualStyleBackColor = true;
+            this.btndetallesventas.Click += new System.EventHandler(this.btndetallesventas_Click);
             // 
             // MenuPrincipal
             // 

@@ -11,7 +11,7 @@ namespace CapaNegocio
     public class NProveedores
     {
         #region InsertarProveedor
-        public static string InsertarProveedor(string nombre, string telefono, string direccion)
+        public static string InsertarProveedor(string nombre, int telefono, string direccion)
         {
             DProveedores proveedor = new DProveedores()
             {
@@ -25,7 +25,7 @@ namespace CapaNegocio
         #endregion
 
         #region EditarProveedor
-        public static string EditarProveedor(int idProveedor, string nombre, string telefono, string direccion)
+        public static string EditarProveedor(int idProveedor, string nombre, int telefono, string direccion)
         {
             DProveedores proveedor = new DProveedores()
             {

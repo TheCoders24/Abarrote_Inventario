@@ -13,12 +13,12 @@ namespace CapaDatos
         public static Utilidades utilidades = new Utilidades(utilidades.SqlUserId, utilidades.SqlPassword);
         public int IDProveedor { get; set; }
         public string Nombre { get; set; }
-        public string Telefono { get; set; }
+        public int Telefono { get; set; }
         public string Direccion { get; set; }
 
         public DProveedores() { }
 
-        public DProveedores(int idproveedor, string nombre, string telefono, string direccion)
+        public DProveedores(int idproveedor, string nombre, int telefono, string direccion)
         {
             IDProveedor = idproveedor;
             Nombre = nombre;
