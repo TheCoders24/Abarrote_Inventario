@@ -30,12 +30,7 @@ namespace Interfaz
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            int IdProveedor = int.Parse(txtIDProveedores.Text);
-            string Nombre = txtNombre.Text;
-            int Telefono = int.Parse(txtTelefono.Text); // Assuming txtTelefono is a TextBox for phone number
-            string Direccion = txtDireccion.Text;
-
-            string ResultadoInsertar = CapaNegocio.NProveedores.InsertarProveedor(Nombre, Telefono, Direccion);
+           
 
         }
     }
