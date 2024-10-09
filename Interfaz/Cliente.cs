@@ -16,5 +16,10 @@ namespace Interfaz
         {
             InitializeComponent();
         }
+
+        private void dataListado_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
