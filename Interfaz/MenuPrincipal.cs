@@ -41,5 +41,10 @@ namespace Interfaz
             Venta ventas = new Venta();
             ventas.ShowDialog();
         }
+
+        private void MenuPrincipal_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

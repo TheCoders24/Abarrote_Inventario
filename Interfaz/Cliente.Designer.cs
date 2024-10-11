@@ -64,7 +64,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(27, 35);
+            this.tabControl1.Location = new System.Drawing.Point(27, 34);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(747, 381);
@@ -91,8 +91,7 @@
             this.cbBuscar.FormattingEnabled = true;
             this.cbBuscar.Items.AddRange(new object[] {
             "Nombre",
-            "Apellido",
-            "Documento"});
+            "Folio"});
             this.cbBuscar.Location = new System.Drawing.Point(10, 48);
             this.cbBuscar.Name = "cbBuscar";
             this.cbBuscar.Size = new System.Drawing.Size(92, 21);

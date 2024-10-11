@@ -37,9 +37,10 @@
             // btnproductos
             // 
             this.btnproductos.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnproductos.Location = new System.Drawing.Point(58, 90);
+            this.btnproductos.Location = new System.Drawing.Point(44, 73);
+            this.btnproductos.Margin = new System.Windows.Forms.Padding(2);
             this.btnproductos.Name = "btnproductos";
-            this.btnproductos.Size = new System.Drawing.Size(124, 39);
+            this.btnproductos.Size = new System.Drawing.Size(93, 32);
             this.btnproductos.TabIndex = 0;
             this.btnproductos.Text = "Productos";
             this.btnproductos.UseVisualStyleBackColor = true;
@@ -48,9 +49,10 @@
             // btnproveedores
             // 
             this.btnproveedores.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnproveedores.Location = new System.Drawing.Point(58, 156);
+            this.btnproveedores.Location = new System.Drawing.Point(44, 127);
+            this.btnproveedores.Margin = new System.Windows.Forms.Padding(2);
             this.btnproveedores.Name = "btnproveedores";
-            this.btnproveedores.Size = new System.Drawing.Size(124, 39);
+            this.btnproveedores.Size = new System.Drawing.Size(93, 32);
             this.btnproveedores.TabIndex = 1;
             this.btnproveedores.Text = "Proveedores";
             this.btnproveedores.UseVisualStyleBackColor = true;
@@ -59,9 +61,10 @@
             // btnclientes
             // 
             this.btnclientes.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnclientes.Location = new System.Drawing.Point(58, 227);
+            this.btnclientes.Location = new System.Drawing.Point(44, 184);
+            this.btnclientes.Margin = new System.Windows.Forms.Padding(2);
             this.btnclientes.Name = "btnclientes";
-            this.btnclientes.Size = new System.Drawing.Size(124, 39);
+            this.btnclientes.Size = new System.Drawing.Size(93, 32);
             this.btnclientes.TabIndex = 2;
             this.btnclientes.Text = "Clientes";
             this.btnclientes.UseVisualStyleBackColor = true;
@@ -70,26 +73,29 @@
             // btndetallesventas
             // 
             this.btndetallesventas.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btndetallesventas.Location = new System.Drawing.Point(58, 296);
+            this.btndetallesventas.Location = new System.Drawing.Point(44, 240);
+            this.btndetallesventas.Margin = new System.Windows.Forms.Padding(2);
             this.btndetallesventas.Name = "btndetallesventas";
-            this.btndetallesventas.Size = new System.Drawing.Size(124, 39);
+            this.btndetallesventas.Size = new System.Drawing.Size(93, 32);
             this.btndetallesventas.TabIndex = 3;
-            this.btndetallesventas.Text = "DetallesVentas";
+            this.btndetallesventas.Text = "Ventas";
             this.btndetallesventas.UseVisualStyleBackColor = true;
             this.btndetallesventas.Click += new System.EventHandler(this.btndetallesventas_Click);
             // 
             // MenuPrincipal
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(250, 395);
+            this.ClientSize = new System.Drawing.Size(188, 321);
             this.Controls.Add(this.btndetallesventas);
             this.Controls.Add(this.btnclientes);
             this.Controls.Add(this.btnproveedores);
             this.Controls.Add(this.btnproductos);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MenuPrincipal";
             this.Text = "MenuPrincipal";
+            this.Load += new System.EventHandler(this.MenuPrincipal_Load);
             this.ResumeLayout(false);
 
         }
