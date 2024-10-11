@@ -25,7 +25,29 @@ namespace Interfaz
 
         private void Proveedor_Load(object sender, EventArgs e)
         {
+            MostrarDatos();
+        }
 
+
+        public void MostrarDatos()
+        {
+            try
+            {
+                var proveedores = NProveedores.MostrarProveedores();
+                if (proveedores != null)
+                {
+                    dataListado.DataSource = NProveedores.MostrarProveedores();
+                    
+                }
+                else
+                {
+                    MessageBox.Show("No Se Encontraron datos de proveedores");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Sucedio un Error al Querer Mostrar los Datos" + ex);
+            }
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
@@ -103,6 +125,11 @@ namespace Interfaz
             {
                 MessageBox.Show("El ID del Proveedor no es válido");
             }
+
+        }
+
+        private void dataListado_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
         }
     }

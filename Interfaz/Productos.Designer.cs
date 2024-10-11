@@ -49,9 +49,9 @@
             this.txtDescripcion = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtNombre = new System.Windows.Forms.TextBox();
-            this.txtIdProducto = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.txtIdProducto = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataListado)).BeginInit();
@@ -177,6 +177,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.txtIdProducto);
             this.groupBox1.Controls.Add(this.txtPrecio);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.btnCancelar);
@@ -186,7 +187,6 @@
             this.groupBox1.Controls.Add(this.txtDescripcion);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.txtNombre);
-            this.groupBox1.Controls.Add(this.txtIdProducto);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(6, 14);
@@ -237,6 +237,7 @@
             this.btnGuardar.TabIndex = 9;
             this.btnGuardar.Text = "&Guardar";
             this.btnGuardar.UseVisualStyleBackColor = true;
+            this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
             // 
             // btnEliminar
             // 
@@ -272,14 +273,6 @@
             this.txtNombre.Size = new System.Drawing.Size(268, 20);
             this.txtNombre.TabIndex = 1;
             // 
-            // txtIdProducto
-            // 
-            this.txtIdProducto.Enabled = false;
-            this.txtIdProducto.Location = new System.Drawing.Point(84, 34);
-            this.txtIdProducto.Name = "txtIdProducto";
-            this.txtIdProducto.Size = new System.Drawing.Size(85, 20);
-            this.txtIdProducto.TabIndex = 30;
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -297,6 +290,13 @@
             this.label3.Size = new System.Drawing.Size(43, 13);
             this.label3.TabIndex = 2;
             this.label3.Text = "Código:";
+            // 
+            // txtIdProducto
+            // 
+            this.txtIdProducto.Location = new System.Drawing.Point(84, 34);
+            this.txtIdProducto.Name = "txtIdProducto";
+            this.txtIdProducto.Size = new System.Drawing.Size(96, 20);
+            this.txtIdProducto.TabIndex = 16;
             // 
             // Productos
             // 
@@ -343,8 +343,8 @@
         private System.Windows.Forms.TextBox txtDescripcion;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtNombre;
-        private System.Windows.Forms.TextBox txtIdProducto;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtIdProducto;
     }
 }

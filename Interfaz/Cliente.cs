@@ -25,7 +25,19 @@ namespace Interfaz
 
         private void Cliente_Load(object sender, EventArgs e)
         {
-           
+           MostrarDatos();
+        }
+
+        public void MostrarDatos()
+        {
+            try
+            {
+                    dataListado.DataSource = NCliente.Mostrar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Sucedio un Error al Querer Mostrar los Datos" + ex);
+            }
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)

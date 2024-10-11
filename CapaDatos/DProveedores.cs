@@ -106,12 +106,12 @@ namespace CapaDatos
 
         public DataTable Mostrar()
         {
-            var resultadoTabla = new DataTable("proveedores");
+            var resultadoTabla = new DataTable("Proveedor");
             var conexionSql = Utilidades.Conexion();
 
             try
             {
-                string consultaSql = "SELECT IDProveedor, Nombre, Telefono, Direccion FROM Proveedores";
+                string consultaSql = "SELECT Nombre, Telefono, Dirección FROM Proveedor";
                 var comandoSql = new SqlCommand(consultaSql, conexionSql);
                 var sqlDat = new SqlDataAdapter(comandoSql);
                 sqlDat.Fill(resultadoTabla);
@@ -129,12 +129,12 @@ namespace CapaDatos
 
         public DataTable BuscarNombre(string nombre)
         {
-            var resultadoTabla = new DataTable("proveedores");
+            var resultadoTabla = new DataTable("Proveedor");
             var conexionSql = Utilidades.Conexion();
 
             try
             {
-                string consultaSql = "SELECT IDProveedor, Nombre, Telefono, Direccion FROM Proveedores WHERE Nombre LIKE @textobuscar + '%'";
+                string consultaSql = "SELECT ID_Proveedor, Nombre, Telefono, Direccion FROM Proveedor WHERE Nombre LIKE @textobuscar + '%'";
                 var comandoSql = new SqlCommand(consultaSql, conexionSql);
                 comandoSql.Parameters.Add("@textobuscar", SqlDbType.VarChar).Value = nombre;
 

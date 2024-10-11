@@ -129,7 +129,7 @@ namespace CapaDatos
 
             try
             {
-                string consultaSql = "SELECT TOP (1000) [ID_Producto], [Nombre], [Precio], [Descripcion], [ID_Proveedor] FROM [AbarroteDB].[dbo].[Producto]";
+                string consultaSql = "SELECT TOP (1000) [Nombre], [Precio], [Descripción], [ID_Proveedor] FROM [AbarroteDB].[dbo].[Producto]";
                 var comandoSql = new SqlCommand(consultaSql, conexionSql);
 
                 SqlDataAdapter sqlDat = new SqlDataAdapter(comandoSql);

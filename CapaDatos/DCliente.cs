@@ -152,35 +152,38 @@ namespace CapaDatos
         #region MetodoMostrar
         public DataTable Mostrar()
         {
-            var resultadoTabla = new DataTable("cliente");
+            var resultadoTabla = new DataTable("Cliente");
 
             try
             {
                 using (var conexionSql = Utilidades.Conexion())
                 {
-                    if (conexionSql == null)
+                    if (conexionSql == null || conexionSql.State != ConnectionState.Open)
                     {
                         throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
                     }
 
-                    string consultaSql = "SELECT ID_Cliente, Nombre, Telefono, Dirección FROM Cliente";
+                    // Consulta SQL corregida
+                    string consultaSql = "SELECT Nombre, Telefono, Dirección FROM Cliente";
 
                     using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
                     {
                         using (var sqlDat = new SqlDataAdapter(comandoSql))
                         {
-                            sqlDat.Fill(resultadoTabla);
+                            sqlDat.Fill(resultadoTabla); // Llena la tabla con los datos obtenidos de la consulta
                         }
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                resultadoTabla = null; // Retorna null en caso de error
+                
+                resultadoTabla = null; // Retorna null si ocurre un error
             }
 
-            return resultadoTabla;
+            return resultadoTabla; // Devuelve la tabla con los resultados
         }
+
         #endregion
 
         #region MetodoBuscarNombre

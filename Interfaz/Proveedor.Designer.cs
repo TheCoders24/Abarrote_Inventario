@@ -40,6 +40,9 @@
             this.txtBuscar = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtIdProveedor = new System.Windows.Forms.TextBox();
+            this.mtxtTelefono = new System.Windows.Forms.MaskedTextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
@@ -49,9 +52,6 @@
             this.txtNombre = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtIdProveedor = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.mtxtTelefono = new System.Windows.Forms.MaskedTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataListado)).BeginInit();
@@ -109,8 +109,6 @@
             // 
             // dataListado
             // 
-            this.dataListado.AllowUserToAddRows = false;
-            this.dataListado.AllowUserToDeleteRows = false;
             this.dataListado.AllowUserToOrderColumns = true;
             this.dataListado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataListado.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -118,16 +116,15 @@
             this.dataListado.Location = new System.Drawing.Point(9, 112);
             this.dataListado.MultiSelect = false;
             this.dataListado.Name = "dataListado";
-            this.dataListado.ReadOnly = true;
             this.dataListado.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataListado.Size = new System.Drawing.Size(837, 237);
             this.dataListado.TabIndex = 9;
+            this.dataListado.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataListado_CellContentClick);
             // 
             // Eliminar
             // 
             this.Eliminar.HeaderText = "Eliminar";
             this.Eliminar.Name = "Eliminar";
-            this.Eliminar.ReadOnly = true;
             // 
             // lblTotal
             // 
@@ -195,6 +192,30 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Proveedores";
+            // 
+            // txtIdProveedor
+            // 
+            this.txtIdProveedor.Location = new System.Drawing.Point(100, 34);
+            this.txtIdProveedor.Name = "txtIdProveedor";
+            this.txtIdProveedor.Size = new System.Drawing.Size(109, 20);
+            this.txtIdProveedor.TabIndex = 19;
+            // 
+            // mtxtTelefono
+            // 
+            this.mtxtTelefono.Location = new System.Drawing.Point(100, 178);
+            this.mtxtTelefono.Mask = "(999)000-0000";
+            this.mtxtTelefono.Name = "mtxtTelefono";
+            this.mtxtTelefono.Size = new System.Drawing.Size(85, 20);
+            this.mtxtTelefono.TabIndex = 18;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 178);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(52, 13);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "Teléfono:";
             // 
             // btnCancelar
             // 
@@ -277,30 +298,6 @@
             this.label3.Size = new System.Drawing.Size(43, 13);
             this.label3.TabIndex = 2;
             this.label3.Text = "Código:";
-            // 
-            // txtIdProveedor
-            // 
-            this.txtIdProveedor.Location = new System.Drawing.Point(100, 34);
-            this.txtIdProveedor.Name = "txtIdProveedor";
-            this.txtIdProveedor.Size = new System.Drawing.Size(109, 20);
-            this.txtIdProveedor.TabIndex = 19;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 178);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(52, 13);
-            this.label8.TabIndex = 17;
-            this.label8.Text = "Teléfono:";
-            // 
-            // mtxtTelefono
-            // 
-            this.mtxtTelefono.Location = new System.Drawing.Point(100, 178);
-            this.mtxtTelefono.Mask = "(999)000-0000";
-            this.mtxtTelefono.Name = "mtxtTelefono";
-            this.mtxtTelefono.Size = new System.Drawing.Size(85, 20);
-            this.mtxtTelefono.TabIndex = 18;
             // 
             // Proveedor
             // 
