@@ -10,7 +10,7 @@ namespace CapaDatos
 {
     public class DProveedores
     {
-        public static Utilidades utilidades = new Utilidades(utilidades.SqlUserId, utilidades.SqlPassword);
+       
         public int IDProveedor { get; set; }
         public string Nombre { get; set; }
         public int Telefono { get; set; }
@@ -30,7 +30,7 @@ namespace CapaDatos
         public string Insertar(DProveedores proveedor)
         {
             string respuesta = "";
-            var conexionSql = utilidades.Conexion();
+            var conexionSql = Utilidades.Conexion();
 
             try
             {
@@ -56,7 +56,7 @@ namespace CapaDatos
         public string Editar(DProveedores proveedor)
         {
             string respuesta = "";
-            var conexionSql = utilidades.Conexion();
+            var conexionSql = Utilidades.Conexion();
 
             try
             {
@@ -83,7 +83,7 @@ namespace CapaDatos
         public string Eliminar(DProveedores proveedor)
         {
             string respuesta = "";
-            var conexionSql = utilidades.Conexion();
+            var conexionSql = Utilidades.Conexion();
 
             try
             {
@@ -107,7 +107,7 @@ namespace CapaDatos
         public DataTable Mostrar()
         {
             var resultadoTabla = new DataTable("proveedores");
-            var conexionSql = utilidades.Conexion();
+            var conexionSql = Utilidades.Conexion();
 
             try
             {
@@ -130,7 +130,7 @@ namespace CapaDatos
         public DataTable BuscarNombre(string nombre)
         {
             var resultadoTabla = new DataTable("proveedores");
-            var conexionSql = utilidades.Conexion();
+            var conexionSql = Utilidades.Conexion();
 
             try
             {

@@ -11,7 +11,7 @@ namespace CapaDatos
     public class DProductos
     {
 
-        public static Utilidades utilidades = new Utilidades(utilidades.SqlUserId, utilidades.SqlPassword);
+        
 
         public DProductos(int idProducto, string nombre, decimal precio, string descripcion, int idProveedor)
         {
@@ -34,7 +34,7 @@ namespace CapaDatos
         public string Insertar(DProductos producto)
         {
             string respuesta = "";
-            var conexionSql = utilidades.Conexion();
+            var conexionSql = Utilidades.Conexion();
 
             try
             {
@@ -65,7 +65,7 @@ namespace CapaDatos
         public string Editar(DProductos producto)
         {
             string respuesta = "";
-            var conexionSql = utilidades.Conexion();
+            var conexionSql = Utilidades.Conexion();
 
             try
             {
@@ -97,7 +97,7 @@ namespace CapaDatos
         public string Eliminar(DProductos producto)
         {
             string respuesta = "";
-            var conexionSql = utilidades.Conexion();
+            var conexionSql = Utilidades.Conexion();
 
             try
             {
@@ -125,7 +125,7 @@ namespace CapaDatos
         public DataTable Mostrar()
         {
             var resultadoTabla = new DataTable("producto");
-            var conexionSql = utilidades.Conexion();
+            var conexionSql = Utilidades.Conexion();
 
             try
             {
@@ -152,7 +152,7 @@ namespace CapaDatos
         public DataTable BuscarNombre(string nombre)
         {
             var resultadoTabla = new DataTable("producto");
-            var conexionSql = utilidades.Conexion();
+            var conexionSql = Utilidades.Conexion();
 
             try
             {

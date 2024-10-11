@@ -8,16 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CapaNegocio;
+using CapaDatos;
 
 namespace Interfaz
 {
     public partial class LoginSesion : Form
     {
+        
         public LoginSesion()
         {
             InitializeComponent();
         }
-
+        Utilidades Utilidades = new Utilidades();   
         private void btnEntrar_Click(object sender, EventArgs e)
         {
             try
@@ -25,6 +27,9 @@ namespace Interfaz
                 NLogin nLogin = new NLogin();
                 string _user = tbUsuario.Text;
                 string _password = tbContrasena.Text;
+                Utilidades.SqlUserId = _user;
+                Utilidades.SqlPassword = _password;
+                
                 if (string.IsNullOrEmpty(_user) || string.IsNullOrEmpty(_password))
                 {
                     MessageBox.Show("Usuario y contraseña esta vacios compruebe las credenciales");

@@ -114,6 +114,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CapaDatos\CapaDatos.csproj">
+      <Project>{7eec1078-767d-495e-9d8c-cd0569cb856a}</Project>
+      <Name>CapaDatos</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CapaNegocio\CapaNegocio.csproj">
       <Project>{b15fa30d-a903-479d-ba4e-304f40a92098}</Project>
       <Name>CapaNegocio</Name>

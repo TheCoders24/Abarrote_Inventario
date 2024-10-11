@@ -11,27 +11,30 @@ namespace CapaNegocio
     public class NCliente
     {
         #region InsertarCliente
-        public static string InsertarCliente(string nombre, string telefono, string direccion)
+        public static string InsertarCliente(int idCliente,string nombre, string direccion, string telefono)
         {
             DCliente cliente = new DCliente()
             {
+                IdCliente = idCliente,  
                 Nombre = nombre,
+                Direccion = direccion,
                 Telefono = telefono,
-                Direccion = direccion
+                
             };
             return cliente.Insertar(cliente);
         }
         #endregion
 
         #region EditarCliente
-        public static string EditarCliente(int idCliente, string nombre, string telefono, string direccion)
+        public static string EditarCliente(int idCliente, string nombre, string direccion, string telefono)
         {
             DCliente cliente = new DCliente()
             {
                 IdCliente = idCliente,
                 Nombre = nombre,
+                Direccion = direccion,
                 Telefono = telefono,
-                Direccion = direccion
+                
             };
             return cliente.Editar(cliente);
         }

@@ -10,13 +10,14 @@ namespace CapaDatos
 {
     public class DCliente
     {
-        public static Utilidades utilidades = new Utilidades(utilidades.SqlUserId,utilidades.SqlPassword);
+        Utilidades utilidades = new Utilidades();
         public DCliente() 
         {
           
         }
         public DCliente(int idCliente, string nombre, string telefono, string direccion,string textoBuscar)
         {
+           
             IdCliente = idCliente;
             Nombre = nombre;
             Telefono = telefono;
@@ -33,31 +34,50 @@ namespace CapaDatos
         public string TextoBuscar { get; set; }
         #endregion
 
-        // Método Insertar con consulta SQL normal
         #region MetodoInsertar
         public string Insertar(DCliente Cliente)
         {
             string respuesta = "";
-            var conexionSql = utilidades.Conexion();
 
             try
             {
-                string consultaSql = "INSERT INTO Cliente (Nombre, Telefono, Dirección) VALUES (@nombre, @telefono, @direccion)";
+                // Validación de datos de entrada
+                if (string.IsNullOrWhiteSpace(Cliente.Nombre) ||
+                    string.IsNullOrWhiteSpace(Cliente.Telefono) ||
+                    string.IsNullOrWhiteSpace(Cliente.Direccion))
+                {
+                    return "Todos los campos son obligatorios.";
+                }
 
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
+                using (var conexionSql = Utilidades.Conexion())
+                {
+                    if (conexionSql == null)
+                    {
+                        throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
+                    }
 
-                comandoSql.Parameters.AddWithValue("@nombre", Cliente.Nombre);
-                comandoSql.Parameters.AddWithValue("@telefono", Cliente.Telefono);
-                comandoSql.Parameters.AddWithValue("@direccion", Cliente.Direccion);
+                    // Asegúrate de que el orden de los parámetros aquí coincide con el orden de las columnas en la tabla.
+                    string consultaSql = "INSERT INTO Cliente (Nombre, Telefono, Dirección) VALUES (@nombre, @telefono, @direccion)";
 
-                respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo insertar el registro";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        // Asignación de parámetros en el mismo orden que en la consulta SQL
+                        comandoSql.Parameters.AddWithValue("@nombre", Cliente.Nombre);
+                        comandoSql.Parameters.AddWithValue("@telefono", Cliente.Telefono);
+                        comandoSql.Parameters.AddWithValue("@direccion", Cliente.Direccion);
+
+                        // Ejecutar la consulta y almacenar el resultado
+                        respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo insertar el registro";
+                    }
+                }
             }
             catch (Exception ex)
             {
-                respuesta = ex.Message;
+                respuesta = "Ocurrió un error: " + ex.Message; // Manejo de excepciones
             }
 
             return respuesta;
+
         }
         #endregion
 
@@ -65,20 +85,28 @@ namespace CapaDatos
         public string Editar(DCliente Cliente)
         {
             string respuesta = "";
-            var conexionSql = utilidades.Conexion();
 
             try
             {
-                string consultaSql = "UPDATE Cliente SET Nombre = @nombre, Telefono = @telefono, Dirección = @direccion WHERE ID_Cliente = @idcliente";
+                using (var conexionSql = Utilidades.Conexion())
+                {
+                    if (conexionSql == null)
+                    {
+                        throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
+                    }
 
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
+                    string consultaSql = "UPDATE Cliente SET Nombre = @nombre, Telefono = @telefono, Dirección = @direccion WHERE ID_Cliente = @idcliente";
 
-                comandoSql.Parameters.AddWithValue("@idcliente", Cliente.IdCliente);
-                comandoSql.Parameters.AddWithValue("@nombre", Cliente.Nombre);
-                comandoSql.Parameters.AddWithValue("@telefono", Cliente.Telefono);
-                comandoSql.Parameters.AddWithValue("@direccion", Cliente.Direccion);
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        comandoSql.Parameters.AddWithValue("@idcliente", Cliente.IdCliente);
+                        comandoSql.Parameters.AddWithValue("@nombre", Cliente.Nombre);
+                        comandoSql.Parameters.AddWithValue("@telefono", Cliente.Telefono);
+                        comandoSql.Parameters.AddWithValue("@direccion", Cliente.Direccion);
 
-                respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo editar el registro";
+                        respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo editar el registro";
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -93,16 +121,24 @@ namespace CapaDatos
         public string Eliminar(DCliente Cliente)
         {
             string respuesta = "";
-            var conexionSql = utilidades.Conexion();
 
             try
             {
-                string consultaSql = "DELETE FROM Cliente WHERE ID_Cliente = @idcliente";
+                using (var conexionSql = Utilidades.Conexion())
+                {
+                    if (conexionSql == null)
+                    {
+                        throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
+                    }
 
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
-                comandoSql.Parameters.AddWithValue("@idcliente", Cliente.IdCliente);
+                    string consultaSql = "DELETE FROM Cliente WHERE ID_Cliente = @idcliente";
 
-                respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo eliminar el registro";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        comandoSql.Parameters.AddWithValue("@idcliente", Cliente.IdCliente);
+                        respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo eliminar el registro";
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -117,19 +153,30 @@ namespace CapaDatos
         public DataTable Mostrar()
         {
             var resultadoTabla = new DataTable("cliente");
-            var conexionSql = utilidades.Conexion();
 
             try
             {
-                string consultaSql = "SELECT ID_Cliente, Nombre, Telefono, Dirección FROM Cliente";
+                using (var conexionSql = Utilidades.Conexion())
+                {
+                    if (conexionSql == null)
+                    {
+                        throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
+                    }
 
-                SqlCommand comandoSql = new SqlCommand(consultaSql, conexionSql);
-                SqlDataAdapter sqlDat = new SqlDataAdapter(comandoSql);
-                sqlDat.Fill(resultadoTabla);
+                    string consultaSql = "SELECT ID_Cliente, Nombre, Telefono, Dirección FROM Cliente";
+
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        using (var sqlDat = new SqlDataAdapter(comandoSql))
+                        {
+                            sqlDat.Fill(resultadoTabla);
+                        }
+                    }
+                }
             }
             catch (Exception)
             {
-                resultadoTabla = null;
+                resultadoTabla = null; // Retorna null en caso de error
             }
 
             return resultadoTabla;
@@ -140,26 +187,38 @@ namespace CapaDatos
         public DataTable BuscarNombre(DCliente Cliente)
         {
             var resultadoTabla = new DataTable("cliente");
-            var conexionSql = utilidades.Conexion();
 
             try
             {
-                string consultaSql = "SELECT ID_Cliente, Nombre, Telefono, Dirección FROM Cliente WHERE Nombre LIKE @textobuscar + '%'";
+                using (var conexionSql = Utilidades.Conexion())
+                {
+                    if (conexionSql == null)
+                    {
+                        throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
+                    }
 
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
-                comandoSql.Parameters.AddWithValue("@textobuscar", Cliente.Nombre);
+                    string consultaSql = "SELECT ID_Cliente, Nombre, Telefono, Dirección FROM Cliente WHERE Nombre LIKE @textobuscar + '%'";
 
-                SqlDataAdapter sqlDat = new SqlDataAdapter(comandoSql);
-                sqlDat.Fill(resultadoTabla);
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        comandoSql.Parameters.AddWithValue("@textobuscar", Cliente.Nombre);
+
+                        using (var sqlDat = new SqlDataAdapter(comandoSql))
+                        {
+                            sqlDat.Fill(resultadoTabla);
+                        }
+                    }
+                }
             }
             catch (Exception)
             {
-                resultadoTabla = null;
+                resultadoTabla = null; // Retorna null en caso de error
             }
 
             return resultadoTabla;
         }
         #endregion
+
 
     }
 }
