@@ -40,8 +40,6 @@
             this.txtBuscar = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.mtxtTelefono = new System.Windows.Forms.MaskedTextBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
@@ -49,9 +47,11 @@
             this.txtDireccion = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtNombre = new System.Windows.Forms.TextBox();
-            this.txtIdProveedor = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.txtIdProveedor = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.mtxtTelefono = new System.Windows.Forms.MaskedTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataListado)).BeginInit();
@@ -177,6 +177,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.txtIdProveedor);
             this.groupBox1.Controls.Add(this.mtxtTelefono);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.btnCancelar);
@@ -186,7 +187,6 @@
             this.groupBox1.Controls.Add(this.txtDireccion);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.txtNombre);
-            this.groupBox1.Controls.Add(this.txtIdProveedor);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(6, 14);
@@ -195,23 +195,6 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Proveedores";
-            // 
-            // mtxtTelefono
-            // 
-            this.mtxtTelefono.Location = new System.Drawing.Point(100, 178);
-            this.mtxtTelefono.Mask = "(999)000-0000";
-            this.mtxtTelefono.Name = "mtxtTelefono";
-            this.mtxtTelefono.Size = new System.Drawing.Size(85, 20);
-            this.mtxtTelefono.TabIndex = 18;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 178);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(52, 13);
-            this.label8.TabIndex = 17;
-            this.label8.Text = "Teléfono:";
             // 
             // btnCancelar
             // 
@@ -230,6 +213,7 @@
             this.btnEditar.TabIndex = 10;
             this.btnEditar.Text = "E&ditar";
             this.btnEditar.UseVisualStyleBackColor = true;
+            this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
             // 
             // btnGuardar
             // 
@@ -239,6 +223,7 @@
             this.btnGuardar.TabIndex = 9;
             this.btnGuardar.Text = "&Guardar";
             this.btnGuardar.UseVisualStyleBackColor = true;
+            this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
             // 
             // btnEliminar
             // 
@@ -248,6 +233,7 @@
             this.btnEliminar.TabIndex = 8;
             this.btnEliminar.Text = "Eliminar";
             this.btnEliminar.UseVisualStyleBackColor = true;
+            this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
             // 
             // txtDireccion
             // 
@@ -274,14 +260,6 @@
             this.txtNombre.Size = new System.Drawing.Size(268, 20);
             this.txtNombre.TabIndex = 5;
             // 
-            // txtIdProveedor
-            // 
-            this.txtIdProveedor.Enabled = false;
-            this.txtIdProveedor.Location = new System.Drawing.Point(100, 34);
-            this.txtIdProveedor.Name = "txtIdProveedor";
-            this.txtIdProveedor.Size = new System.Drawing.Size(85, 20);
-            this.txtIdProveedor.TabIndex = 4;
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -300,11 +278,35 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "Código:";
             // 
+            // txtIdProveedor
+            // 
+            this.txtIdProveedor.Location = new System.Drawing.Point(100, 34);
+            this.txtIdProveedor.Name = "txtIdProveedor";
+            this.txtIdProveedor.Size = new System.Drawing.Size(109, 20);
+            this.txtIdProveedor.TabIndex = 19;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 178);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(52, 13);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "Teléfono:";
+            // 
+            // mtxtTelefono
+            // 
+            this.mtxtTelefono.Location = new System.Drawing.Point(100, 178);
+            this.mtxtTelefono.Mask = "(999)000-0000";
+            this.mtxtTelefono.Name = "mtxtTelefono";
+            this.mtxtTelefono.Size = new System.Drawing.Size(85, 20);
+            this.mtxtTelefono.TabIndex = 18;
+            // 
             // Proveedor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(882, 497);
+            this.ClientSize = new System.Drawing.Size(882, 501);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.label1);
             this.Name = "Proveedor";
@@ -336,8 +338,6 @@
         private System.Windows.Forms.TextBox txtBuscar;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.MaskedTextBox mtxtTelefono;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.Button btnGuardar;
@@ -345,8 +345,10 @@
         private System.Windows.Forms.TextBox txtDireccion;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtNombre;
-        private System.Windows.Forms.TextBox txtIdProveedor;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtIdProveedor;
+        private System.Windows.Forms.MaskedTextBox mtxtTelefono;
+        private System.Windows.Forms.Label label8;
     }
 }

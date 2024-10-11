@@ -13,12 +13,12 @@ namespace CapaDatos
        
         public int IDProveedor { get; set; }
         public string Nombre { get; set; }
-        public int Telefono { get; set; }
+        public string Telefono { get; set; }
         public string Direccion { get; set; }
 
         public DProveedores() { }
 
-        public DProveedores(int idproveedor, string nombre, int telefono, string direccion)
+        public DProveedores(int idproveedor, string nombre, string telefono, string direccion)
         {
             IDProveedor = idproveedor;
             Nombre = nombre;
@@ -34,7 +34,7 @@ namespace CapaDatos
 
             try
             {
-                string consultaSql = "INSERT INTO Proveedores (Nombre, Telefono, Direccion) VALUES (@nombre, @telefono, @direccion)";
+                string consultaSql = "INSERT INTO Proveedor (Nombre, Telefono, Dirección) VALUES (@nombre, @telefono, @direccion)";
                 var comandoSql = new SqlCommand(consultaSql, conexionSql);
                 comandoSql.Parameters.Add("@nombre", SqlDbType.VarChar).Value = proveedor.Nombre;
                 comandoSql.Parameters.Add("@telefono", SqlDbType.VarChar).Value = proveedor.Telefono;
@@ -60,7 +60,7 @@ namespace CapaDatos
 
             try
             {
-                string consultaSql = "UPDATE Proveedores SET Nombre = @nombre, Telefono = @telefono, Direccion = @direccion WHERE IDProveedor = @idproveedor";
+                string consultaSql = "UPDATE Proveedor SET Nombre = @nombre, Telefono = @telefono, Direccion = @direccion WHERE ID_Proveedor = @idproveedor";
                 var comandoSql = new SqlCommand(consultaSql, conexionSql);
                 comandoSql.Parameters.Add("@idproveedor", SqlDbType.Int).Value = proveedor.IDProveedor;
                 comandoSql.Parameters.Add("@nombre", SqlDbType.VarChar).Value = proveedor.Nombre;
@@ -87,7 +87,7 @@ namespace CapaDatos
 
             try
             {
-                string consultaSql = "DELETE FROM Proveedores WHERE IDProveedor = @idproveedor";
+                string consultaSql = "DELETE FROM Proveedor WHERE ID_Proveedor = @idproveedor";
                 var comandoSql = new SqlCommand(consultaSql, conexionSql);
                 comandoSql.Parameters.AddWithValue("@idproveedor", proveedor.IDProveedor);
 
