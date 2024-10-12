@@ -114,20 +114,32 @@ namespace Interfaz
             WHERE 
                 p.Nombre = @NombreProducto AND c.Nombre = @NombreCliente;";
 
-            using (SqlConnection connection = Utilidades.Conexion())
+            try
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@NombreProducto", nombreProducto);
-                command.Parameters.AddWithValue("@NombreCliente", nombreCliente);
+                using (SqlConnection connection = Utilidades.Conexion())
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@NombreProducto", nombreProducto);
+                    command.Parameters.AddWithValue("@NombreCliente", nombreCliente);
 
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataTable detallesTable = new DataTable();
-                adapter.Fill(detallesTable);
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable detallesTable = new DataTable();
+                    adapter.Fill(detallesTable);
 
-                // Asignar el DataTable al DataGridView
-                dataGridView1.DataSource = detallesTable;
+                    // Limpiar DataGridView previo
+                    dataGridView1.DataSource = null;
+                    dataGridView1.Rows.Clear();
+
+                    // Asignar el DataTable al DataGridView
+                    dataGridView1.DataSource = detallesTable;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar detalles de venta: " + ex.Message);
             }
         }
+
         private void DetalleVenta_Load(object sender, EventArgs e)
         {
            
