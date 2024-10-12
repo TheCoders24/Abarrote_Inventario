@@ -23,27 +23,7 @@ namespace Interfaz
         private void btnGuardar_Click(object sender, EventArgs e)
         {
 
-            // Creación de una instancia de NVenta
-            NVenta nVenta = new NVenta();
-            DateTime fecga = DateTime.Now;
-
-
-            // Inserción de una nueva venta
-            // Llama a la función para insertar la venta
-            string resultado = NVenta.InsertarVenta(int.Parse(txtFolio.Text), fecga,
-                decimal.Parse(txtImporte.Text), decimal.Parse(txtIVA.Text),
-                decimal.Parse(txtTotal.Text), txtmetodopago.Text);
-
-            // Manejo del resultado
-            if (resultado == "Ok")
-            {
-                MessageBox.Show("Venta insertada correctamente.");
-            }
-            else
-            {
-                MessageBox.Show("Error al insertar la venta: " + resultado);
-            }
-
+          
 
         }
 
@@ -55,6 +35,11 @@ namespace Interfaz
         private void btnCancelar_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Venta_Load(object sender, EventArgs e)
+        {
+           
         }
     }
 }

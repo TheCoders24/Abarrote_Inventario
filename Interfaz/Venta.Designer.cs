@@ -39,6 +39,9 @@
             this.txtBuscar = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtmetodopago = new System.Windows.Forms.TextBox();
+            this.txtFolioCliente = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.txtTotal = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -51,9 +54,6 @@
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtFolioCliente = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.txtmetodopago = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataListado)).BeginInit();
@@ -186,6 +186,29 @@
             this.groupBox1.Text = "Venta";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
+            // txtmetodopago
+            // 
+            this.txtmetodopago.Location = new System.Drawing.Point(91, 195);
+            this.txtmetodopago.Name = "txtmetodopago";
+            this.txtmetodopago.Size = new System.Drawing.Size(167, 20);
+            this.txtmetodopago.TabIndex = 41;
+            // 
+            // txtFolioCliente
+            // 
+            this.txtFolioCliente.Location = new System.Drawing.Point(91, 235);
+            this.txtFolioCliente.Name = "txtFolioCliente";
+            this.txtFolioCliente.Size = new System.Drawing.Size(167, 20);
+            this.txtFolioCliente.TabIndex = 40;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(10, 238);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(64, 13);
+            this.label8.TabIndex = 39;
+            this.label8.Text = "FolioCliente:";
+            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -289,29 +312,6 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "Ventas";
             // 
-            // txtFolioCliente
-            // 
-            this.txtFolioCliente.Location = new System.Drawing.Point(91, 235);
-            this.txtFolioCliente.Name = "txtFolioCliente";
-            this.txtFolioCliente.Size = new System.Drawing.Size(167, 20);
-            this.txtFolioCliente.TabIndex = 40;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(10, 238);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(64, 13);
-            this.label8.TabIndex = 39;
-            this.label8.Text = "FolioCliente:";
-            // 
-            // txtmetodopago
-            // 
-            this.txtmetodopago.Location = new System.Drawing.Point(91, 195);
-            this.txtmetodopago.Name = "txtmetodopago";
-            this.txtmetodopago.Size = new System.Drawing.Size(167, 20);
-            this.txtmetodopago.TabIndex = 41;
-            // 
             // Venta
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,6 +321,7 @@
             this.Controls.Add(this.label2);
             this.Name = "Venta";
             this.Text = "Venta";
+            this.Load += new System.EventHandler(this.Venta_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
