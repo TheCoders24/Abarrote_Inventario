@@ -25,15 +25,18 @@ namespace Interfaz
             try
             {
                 NLogin nLogin = new NLogin();
-                string _user = tbUsuario.Text;
-                string _password = tbContrasena.Text;
-                Utilidades.SqlUserId = _user;
-                Utilidades.SqlPassword = _password;
+                string _user = tbUsuario.Text.Trim();
+                string _password = tbContrasena.Text.Trim();
+               
                 
                 if (string.IsNullOrEmpty(_user) || string.IsNullOrEmpty(_password))
                 {
                     MessageBox.Show("Usuario y contraseña esta vacios compruebe las credenciales");
                 }
+
+                // Asignamos valores depues de la validacion
+                Utilidades.SqlUserId = _user;
+                Utilidades.SqlPassword = _password;
 
                 bool loginExitoso = nLogin.IniciarSesion(_user, _password);
 
@@ -42,6 +45,7 @@ namespace Interfaz
                     MessageBox.Show("Login Exitoso");
                     MenuPrincipal frm = new MenuPrincipal();
                     frm.Show();
+                    this.Hide();
                 }
                 else
                 {

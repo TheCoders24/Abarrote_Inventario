@@ -25,6 +25,13 @@ namespace CapaDatos
         {
             get
             {
+
+                // Validar que el usuario y la contraseña no sean nulos o vacíos
+                if (string.IsNullOrEmpty(SqlUserId) || string.IsNullOrEmpty(SqlPassword))
+                {
+                    throw new InvalidOperationException("El usuario y la contraseña no pueden estar vacíos.");
+                }
+
                 return $"Server={SqlServer};Database={SqlDataBase};User Id={SqlUserId};Password={SqlPassword};";
             }
         }

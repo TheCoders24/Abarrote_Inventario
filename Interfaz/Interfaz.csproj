@@ -52,11 +52,11 @@
     <Compile Include="Cliente.Designer.cs">
       <DependentUpon>Cliente.cs</DependentUpon>
     </Compile>
-    <Compile Include="DetalleInventario.cs">
+    <Compile Include="DetalleVenta.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DetalleInventario.Designer.cs">
-      <DependentUpon>DetalleInventario.cs</DependentUpon>
+    <Compile Include="DetalleVenta.Designer.cs">
+      <DependentUpon>DetalleVenta.cs</DependentUpon>
     </Compile>
     <Compile Include="Inventario.cs">
       <SubType>Form</SubType>
@@ -99,6 +99,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Cliente.resx">
       <DependentUpon>Cliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetalleVenta.resx">
+      <DependentUpon>DetalleVenta.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Inventario.resx">
       <DependentUpon>Inventario.cs</DependentUpon>

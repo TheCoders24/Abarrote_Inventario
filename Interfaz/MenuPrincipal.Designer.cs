@@ -104,7 +104,7 @@
             this.btnDetallesIvnetario.Name = "btnDetallesIvnetario";
             this.btnDetallesIvnetario.Size = new System.Drawing.Size(115, 32);
             this.btnDetallesIvnetario.TabIndex = 5;
-            this.btnDetallesIvnetario.Text = "DetalleInventario";
+            this.btnDetallesIvnetario.Text = "DetalleVenta";
             this.btnDetallesIvnetario.UseVisualStyleBackColor = true;
             this.btnDetallesIvnetario.Click += new System.EventHandler(this.btnDetallesIvnetario_Click);
             // 

@@ -55,8 +55,8 @@ namespace Interfaz
 
         private void btnDetallesIvnetario_Click(object sender, EventArgs e)
         {
-            DetalleInventario detalleInventario = new DetalleInventario();  
-            detalleInventario.ShowDialog();
+            DetalleVenta detalleVenta = new DetalleVenta();
+            detalleVenta.ShowDialog();
         }
     }
 }
