@@ -13,13 +13,11 @@ namespace CapaNegocio
         {
             
         }
-
-        #region InsertarVenta
-        public static string InsertarVenta(DateTime fecha, decimal importe, decimal iva, decimal total, string metodoPago, int idCliente)
+        // Método para insertar una venta
+        public static string InsertarVenta(int idCliente, DateTime fecha, decimal importe, decimal iva, decimal total, string metodoPago)
         {
-            DVenta venta = new DVenta(0, fecha, importe, iva, total, metodoPago, idCliente);
-            return venta.Insertar(venta);
+            // Llama al método de la clase DVenta para insertar la venta
+            return DVenta.InsertarVenta(idCliente, fecha, importe, iva, total, metodoPago);
         }
-        #endregion
     }
 }

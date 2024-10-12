@@ -39,7 +39,6 @@
             this.txtBuscar = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.comboMetodoPago = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.txtTotal = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -47,13 +46,14 @@
             this.label5 = new System.Windows.Forms.Label();
             this.txtImporte = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.dateFecha = new System.Windows.Forms.DateTimePicker();
-            this.label3 = new System.Windows.Forms.Label();
             this.txtFolio = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.txtFolioCliente = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtmetodopago = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataListado)).BeginInit();
@@ -164,7 +164,9 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.comboMetodoPago);
+            this.groupBox1.Controls.Add(this.txtmetodopago);
+            this.groupBox1.Controls.Add(this.txtFolioCliente);
+            this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.txtTotal);
             this.groupBox1.Controls.Add(this.label6);
@@ -172,33 +174,22 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.txtImporte);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.dateFecha);
-            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.txtFolio);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.btnCancelar);
             this.groupBox1.Controls.Add(this.btnGuardar);
             this.groupBox1.Location = new System.Drawing.Point(6, 14);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(840, 335);
+            this.groupBox1.Size = new System.Drawing.Size(840, 338);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Venta";
-            // 
-            // comboMetodoPago
-            // 
-            this.comboMetodoPago.FormattingEnabled = true;
-            this.comboMetodoPago.Items.AddRange(new object[] {
-            "Efectivo"});
-            this.comboMetodoPago.Location = new System.Drawing.Point(108, 234);
-            this.comboMetodoPago.Name = "comboMetodoPago";
-            this.comboMetodoPago.Size = new System.Drawing.Size(121, 21);
-            this.comboMetodoPago.TabIndex = 38;
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(11, 237);
+            this.label7.Location = new System.Drawing.Point(9, 195);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(74, 13);
             this.label7.TabIndex = 37;
@@ -206,7 +197,7 @@
             // 
             // txtTotal
             // 
-            this.txtTotal.Location = new System.Drawing.Point(62, 195);
+            this.txtTotal.Location = new System.Drawing.Point(60, 153);
             this.txtTotal.Name = "txtTotal";
             this.txtTotal.Size = new System.Drawing.Size(198, 20);
             this.txtTotal.TabIndex = 36;
@@ -214,7 +205,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 198);
+            this.label6.Location = new System.Drawing.Point(10, 156);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(34, 13);
             this.label6.TabIndex = 35;
@@ -222,7 +213,7 @@
             // 
             // txtIVA
             // 
-            this.txtIVA.Location = new System.Drawing.Point(62, 147);
+            this.txtIVA.Location = new System.Drawing.Point(60, 105);
             this.txtIVA.Name = "txtIVA";
             this.txtIVA.Size = new System.Drawing.Size(198, 20);
             this.txtIVA.TabIndex = 34;
@@ -230,7 +221,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 150);
+            this.label5.Location = new System.Drawing.Point(10, 108);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(27, 13);
             this.label5.TabIndex = 33;
@@ -238,7 +229,7 @@
             // 
             // txtImporte
             // 
-            this.txtImporte.Location = new System.Drawing.Point(62, 108);
+            this.txtImporte.Location = new System.Drawing.Point(60, 66);
             this.txtImporte.Name = "txtImporte";
             this.txtImporte.Size = new System.Drawing.Size(198, 20);
             this.txtImporte.TabIndex = 32;
@@ -246,27 +237,11 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 108);
+            this.label4.Location = new System.Drawing.Point(10, 66);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(42, 13);
             this.label4.TabIndex = 31;
             this.label4.Text = "Importe";
-            // 
-            // dateFecha
-            // 
-            this.dateFecha.Location = new System.Drawing.Point(62, 68);
-            this.dateFecha.Name = "dateFecha";
-            this.dateFecha.Size = new System.Drawing.Size(198, 20);
-            this.dateFecha.TabIndex = 30;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(11, 68);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(40, 13);
-            this.label3.TabIndex = 29;
-            this.label3.Text = "Fecha:";
             // 
             // txtFolio
             // 
@@ -286,16 +261,17 @@
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(118, 282);
+            this.btnCancelar.Location = new System.Drawing.Point(139, 290);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(75, 23);
             this.btnCancelar.TabIndex = 26;
             this.btnCancelar.Text = "&Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // btnGuardar
             // 
-            this.btnGuardar.Location = new System.Drawing.Point(14, 282);
+            this.btnGuardar.Location = new System.Drawing.Point(35, 290);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(75, 23);
             this.btnGuardar.TabIndex = 25;
@@ -312,6 +288,29 @@
             this.label2.Size = new System.Drawing.Size(80, 25);
             this.label2.TabIndex = 7;
             this.label2.Text = "Ventas";
+            // 
+            // txtFolioCliente
+            // 
+            this.txtFolioCliente.Location = new System.Drawing.Point(91, 235);
+            this.txtFolioCliente.Name = "txtFolioCliente";
+            this.txtFolioCliente.Size = new System.Drawing.Size(167, 20);
+            this.txtFolioCliente.TabIndex = 40;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(10, 238);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(64, 13);
+            this.label8.TabIndex = 39;
+            this.label8.Text = "FolioCliente:";
+            // 
+            // txtmetodopago
+            // 
+            this.txtmetodopago.Location = new System.Drawing.Point(91, 195);
+            this.txtmetodopago.Name = "txtmetodopago";
+            this.txtmetodopago.Size = new System.Drawing.Size(167, 20);
+            this.txtmetodopago.TabIndex = 41;
             // 
             // Venta
             // 
@@ -348,7 +347,6 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboMetodoPago;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtTotal;
         private System.Windows.Forms.Label label6;
@@ -356,11 +354,12 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtImporte;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DateTimePicker dateFecha;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtFolio;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnGuardar;
+        private System.Windows.Forms.TextBox txtFolioCliente;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtmetodopago;
     }
 }
