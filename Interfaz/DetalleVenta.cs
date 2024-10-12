@@ -178,7 +178,6 @@ namespace Interfaz
             CargarDetallesVenta(nombreProducto,nombreCliente);
         }
 
-
         private void ConfigurarDataGridView()
         {
             dataGridView1.Columns.Add("Producto", "Producto");
