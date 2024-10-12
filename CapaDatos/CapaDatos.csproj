@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DCliente.cs" />
+    <Compile Include="DVenta.cs" />
     <Compile Include="DLogin.cs" />
     <Compile Include="DProductos.cs" />
     <Compile Include="DProveedores.cs" />
