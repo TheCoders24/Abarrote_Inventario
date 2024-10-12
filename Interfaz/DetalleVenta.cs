@@ -161,6 +161,9 @@ namespace Interfaz
                         precioUnitario,       // Importe
                         importe                // Total
                 );
+            string nombreProducto = comboboxProducto.Text;
+            string nombreCliente = comboBoxCliente.Text;
+            CargarDetallesVenta(nombreProducto,nombreCliente);
         }
 
 
@@ -171,8 +174,6 @@ namespace Interfaz
             dataGridView1.Columns.Add("PrecioUnitario", "Precio Unitario");
             dataGridView1.Columns.Add("Total", "Total");
         }
-
-
         // limpiamos los controles del windows forms 
         public void LimpiarControles()
         {
@@ -182,6 +183,25 @@ namespace Interfaz
             txtsubtotal.Clear();    
             txtTotal.Clear();
             txtiva.Clear(); 
+        }
+
+        private void comboboxProducto_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboboxProducto.SelectedItem != null)
+            {
+                DataRowView selectedRow = (DataRowView)comboboxProducto.SelectedItem;
+                decimal precio = Convert.ToDecimal(selectedRow["Precio"]);
+                txtPrecio.Text = precio.ToString("F2"); // Muestra el precio con dos decimales
+
+                // Reinicia el campo de cantidad
+                txtCantidad.Text = "1"; // Valor predeterminado
+               
+            }
+        }
+
+        private void txtCantidad_TextChanged(object sender, EventArgs e)
+        {
+         
         }
     }
 }

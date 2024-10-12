@@ -88,6 +88,7 @@
             this.comboboxProducto.Name = "comboboxProducto";
             this.comboboxProducto.Size = new System.Drawing.Size(256, 21);
             this.comboboxProducto.TabIndex = 4;
+            this.comboboxProducto.SelectedIndexChanged += new System.EventHandler(this.comboboxProducto_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -113,6 +114,7 @@
             this.txtCantidad.Name = "txtCantidad";
             this.txtCantidad.Size = new System.Drawing.Size(100, 20);
             this.txtCantidad.TabIndex = 7;
+            this.txtCantidad.TextChanged += new System.EventHandler(this.txtCantidad_TextChanged);
             // 
             // txtPrecio
             // 
