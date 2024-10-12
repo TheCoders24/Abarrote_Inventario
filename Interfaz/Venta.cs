@@ -19,7 +19,14 @@ namespace Interfaz
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show("Sucedio un Error al insertar btnguardar");
+            }
         }
     }
 }
