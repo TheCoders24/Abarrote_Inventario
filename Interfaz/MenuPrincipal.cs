@@ -46,5 +46,17 @@ namespace Interfaz
         {
 
         }
+
+        private void btnInventario_Click(object sender, EventArgs e)
+        {
+            Inventario inventario = new Inventario();   
+            inventario.ShowDialog();    
+        }
+
+        private void btnDetallesIvnetario_Click(object sender, EventArgs e)
+        {
+            DetalleInventario detalleInventario = new DetalleInventario();  
+            detalleInventario.ShowDialog();
+        }
     }
 }

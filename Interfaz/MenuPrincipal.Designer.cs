@@ -32,15 +32,17 @@
             this.btnproveedores = new System.Windows.Forms.Button();
             this.btnclientes = new System.Windows.Forms.Button();
             this.btndetallesventas = new System.Windows.Forms.Button();
+            this.btnInventario = new System.Windows.Forms.Button();
+            this.btnDetallesIvnetario = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnproductos
             // 
             this.btnproductos.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnproductos.Location = new System.Drawing.Point(44, 73);
+            this.btnproductos.Location = new System.Drawing.Point(28, 73);
             this.btnproductos.Margin = new System.Windows.Forms.Padding(2);
             this.btnproductos.Name = "btnproductos";
-            this.btnproductos.Size = new System.Drawing.Size(93, 32);
+            this.btnproductos.Size = new System.Drawing.Size(109, 32);
             this.btnproductos.TabIndex = 0;
             this.btnproductos.Text = "Productos";
             this.btnproductos.UseVisualStyleBackColor = true;
@@ -49,10 +51,10 @@
             // btnproveedores
             // 
             this.btnproveedores.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnproveedores.Location = new System.Drawing.Point(44, 127);
+            this.btnproveedores.Location = new System.Drawing.Point(28, 127);
             this.btnproveedores.Margin = new System.Windows.Forms.Padding(2);
             this.btnproveedores.Name = "btnproveedores";
-            this.btnproveedores.Size = new System.Drawing.Size(93, 32);
+            this.btnproveedores.Size = new System.Drawing.Size(109, 32);
             this.btnproveedores.TabIndex = 1;
             this.btnproveedores.Text = "Proveedores";
             this.btnproveedores.UseVisualStyleBackColor = true;
@@ -61,10 +63,10 @@
             // btnclientes
             // 
             this.btnclientes.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnclientes.Location = new System.Drawing.Point(44, 184);
+            this.btnclientes.Location = new System.Drawing.Point(28, 184);
             this.btnclientes.Margin = new System.Windows.Forms.Padding(2);
             this.btnclientes.Name = "btnclientes";
-            this.btnclientes.Size = new System.Drawing.Size(93, 32);
+            this.btnclientes.Size = new System.Drawing.Size(109, 32);
             this.btnclientes.TabIndex = 2;
             this.btnclientes.Text = "Clientes";
             this.btnclientes.UseVisualStyleBackColor = true;
@@ -73,21 +75,47 @@
             // btndetallesventas
             // 
             this.btndetallesventas.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btndetallesventas.Location = new System.Drawing.Point(44, 240);
+            this.btndetallesventas.Location = new System.Drawing.Point(28, 240);
             this.btndetallesventas.Margin = new System.Windows.Forms.Padding(2);
             this.btndetallesventas.Name = "btndetallesventas";
-            this.btndetallesventas.Size = new System.Drawing.Size(93, 32);
+            this.btndetallesventas.Size = new System.Drawing.Size(109, 32);
             this.btndetallesventas.TabIndex = 3;
             this.btndetallesventas.Text = "Ventas";
             this.btndetallesventas.UseVisualStyleBackColor = true;
             this.btndetallesventas.Click += new System.EventHandler(this.btndetallesventas_Click);
+            // 
+            // btnInventario
+            // 
+            this.btnInventario.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnInventario.Location = new System.Drawing.Point(159, 73);
+            this.btnInventario.Margin = new System.Windows.Forms.Padding(2);
+            this.btnInventario.Name = "btnInventario";
+            this.btnInventario.Size = new System.Drawing.Size(115, 32);
+            this.btnInventario.TabIndex = 4;
+            this.btnInventario.Text = "Inventario";
+            this.btnInventario.UseVisualStyleBackColor = true;
+            this.btnInventario.Click += new System.EventHandler(this.btnInventario_Click);
+            // 
+            // btnDetallesIvnetario
+            // 
+            this.btnDetallesIvnetario.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDetallesIvnetario.Location = new System.Drawing.Point(159, 127);
+            this.btnDetallesIvnetario.Margin = new System.Windows.Forms.Padding(2);
+            this.btnDetallesIvnetario.Name = "btnDetallesIvnetario";
+            this.btnDetallesIvnetario.Size = new System.Drawing.Size(115, 32);
+            this.btnDetallesIvnetario.TabIndex = 5;
+            this.btnDetallesIvnetario.Text = "DetalleInventario";
+            this.btnDetallesIvnetario.UseVisualStyleBackColor = true;
+            this.btnDetallesIvnetario.Click += new System.EventHandler(this.btnDetallesIvnetario_Click);
             // 
             // MenuPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(188, 321);
+            this.ClientSize = new System.Drawing.Size(305, 321);
+            this.Controls.Add(this.btnDetallesIvnetario);
+            this.Controls.Add(this.btnInventario);
             this.Controls.Add(this.btndetallesventas);
             this.Controls.Add(this.btnclientes);
             this.Controls.Add(this.btnproveedores);
@@ -106,5 +134,7 @@
         private System.Windows.Forms.Button btnproveedores;
         private System.Windows.Forms.Button btnclientes;
         private System.Windows.Forms.Button btndetallesventas;
+        private System.Windows.Forms.Button btnInventario;
+        private System.Windows.Forms.Button btnDetallesIvnetario;
     }
 }
