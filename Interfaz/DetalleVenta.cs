@@ -215,6 +215,8 @@ namespace Interfaz
             // Cálculo del subtotal
             decimal subtotal = cantidad * preciounitario;
             txtsubtotal.Text = subtotal.ToString();
+            txtTotal.Text = subtotal.ToString();
+            
 
             // Consulta SQL para insertar en Venta
             string queryInsertVenta = @"
@@ -286,12 +288,13 @@ namespace Interfaz
 
                             // Insertar en la tabla Venta
                             int idVenta;
+                            decimal iva = 0.16m;
                             using (SqlCommand commandInsertVenta = new SqlCommand(queryInsertVenta, connection, transaction))
                             {
                                 // Parámetros para la tabla Venta
                                 commandInsertVenta.Parameters.AddWithValue("@Fecha", DateTime.Now);
                                 commandInsertVenta.Parameters.AddWithValue("@Importe", subtotal);
-                                commandInsertVenta.Parameters.AddWithValue("@Iva", 0.16m * subtotal); // Asumiendo un IVA del 16%
+                                commandInsertVenta.Parameters.AddWithValue("@Iva", iva * subtotal); // Asumiendo un IVA del 16%
                                 commandInsertVenta.Parameters.AddWithValue("@Total", 1.16m * subtotal);
                                 commandInsertVenta.Parameters.AddWithValue("@MetodoPago", "Efectivo"); // Puedes cambiar el método de pago según la selección
                                 commandInsertVenta.Parameters.AddWithValue("@ID_Cliente", clienteId.Value);
@@ -379,6 +382,7 @@ namespace Interfaz
                 );
             string nombreProducto = comboboxProducto.Text;
             string nombreCliente = comboBoxCliente.Text;
+           
             CargarDetallesVenta(nombreProducto,nombreCliente,cantidad,precioUnitario);
         }
 
