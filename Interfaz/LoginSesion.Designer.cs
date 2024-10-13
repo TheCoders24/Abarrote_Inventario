@@ -111,6 +111,7 @@
             this.Controls.Add(this.label1);
             this.Name = "LoginSesion";
             this.Text = "LoginSesion";
+            this.Load += new System.EventHandler(this.LoginSesion_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

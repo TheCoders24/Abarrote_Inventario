@@ -29,32 +29,30 @@ namespace CapaDatos
         public string Descripcion { get; set; }
         public int IdProveedor { get; set; }
         #endregion
-
         #region MetodoInsertar
-        public string Insertar(DProductos producto)
+        public async Task<string> InsertarAsync(DProductos producto)
         {
-            string respuesta = "";
-            var conexionSql = Utilidades.Conexion();
-
-            try
+            string respuesta;
+            using (var conexionSql = await Utilidades.ObtenerConexionAsync())
             {
-                string consultaSql = "INSERT INTO Producto (Nombre, Precio, Descripcion, ID_Proveedor) VALUES (@nombre, @precio, @descripcion, @idProveedor)";
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
+                try
+                {
+                    string consultaSql = "INSERT INTO Producto (Nombre, Precio, Descripción, ID_Proveedor) VALUES (@nombre, @precio, @descripcion, @idProveedor)";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                       
+                        comandoSql.Parameters.Add("@nombre", SqlDbType.NVarChar).Value = producto.Nombre;
+                        comandoSql.Parameters.Add("@precio", SqlDbType.Decimal).Value = producto.Precio;
+                        comandoSql.Parameters.Add("@descripcion", SqlDbType.NVarChar).Value = producto.Descripcion;
+                        comandoSql.Parameters.Add("@idProveedor", SqlDbType.Int).Value = producto.IdProveedor;
 
-                comandoSql.Parameters.AddWithValue("@nombre", producto.Nombre);
-                comandoSql.Parameters.AddWithValue("@precio", producto.Precio);
-                comandoSql.Parameters.AddWithValue("@descripcion", producto.Descripcion);
-                comandoSql.Parameters.AddWithValue("@idProveedor", producto.IdProveedor);
-
-                respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo insertar el registro";
-            }
-            catch (Exception ex)
-            {
-                respuesta = ex.Message; // Consider logging the exception here.
-            }
-            finally
-            {
-                conexionSql.Close(); // Cerrar la conexión
+                        respuesta = await comandoSql.ExecuteNonQueryAsync() == 1 ? "Ok" : "No se pudo insertar el registro";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    respuesta = ex.Message; // Consider logging the exception here.
+                }
             }
 
             return respuesta;
@@ -62,31 +60,29 @@ namespace CapaDatos
         #endregion
 
         #region MetodoEditar
-        public string Editar(DProductos producto)
+        public async Task<string> EditarAsync(DProductos producto)
         {
-            string respuesta = "";
-            var conexionSql = Utilidades.Conexion();
-
-            try
+            string respuesta;
+            using (var conexionSql = await Utilidades.ObtenerConexionAsync())
             {
-                string consultaSql = "UPDATE Producto SET Nombre = @nombre, Precio = @precio, Descripcion = @descripcion, ID_Proveedor = @idProveedor WHERE ID_Producto = @idProducto";
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
+                try
+                {
+                    string consultaSql = "UPDATE Producto SET Nombre = @nombre, Precio = @precio, Descripcion = @descripcion, ID_Proveedor = @idProveedor WHERE ID_Producto = @idProducto";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        comandoSql.Parameters.AddWithValue("@idProducto", producto.IdProducto);
+                        comandoSql.Parameters.AddWithValue("@nombre", producto.Nombre);
+                        comandoSql.Parameters.AddWithValue("@precio", producto.Precio);
+                        comandoSql.Parameters.AddWithValue("@descripcion", producto.Descripcion);
+                        comandoSql.Parameters.AddWithValue("@idProveedor", producto.IdProveedor);
 
-                comandoSql.Parameters.AddWithValue("@idProducto", producto.IdProducto);
-                comandoSql.Parameters.AddWithValue("@nombre", producto.Nombre);
-                comandoSql.Parameters.AddWithValue("@precio", producto.Precio);
-                comandoSql.Parameters.AddWithValue("@descripcion", producto.Descripcion);
-                comandoSql.Parameters.AddWithValue("@idProveedor", producto.IdProveedor);
-
-                respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo editar el registro";
-            }
-            catch (Exception ex)
-            {
-                respuesta = ex.Message; // Consider logging the exception here.
-            }
-            finally
-            {
-                conexionSql.Close(); // Cerrar la conexión
+                        respuesta = await comandoSql.ExecuteNonQueryAsync() == 1 ? "Ok" : "No se pudo editar el registro";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    respuesta = ex.Message; // Consider logging the exception here.
+                }
             }
 
             return respuesta;
@@ -94,27 +90,25 @@ namespace CapaDatos
         #endregion
 
         #region MetodoEliminar
-        public string Eliminar(DProductos producto)
+        public async Task<string> EliminarAsync(DProductos producto)
         {
-            string respuesta = "";
-            var conexionSql = Utilidades.Conexion();
-
-            try
+            string respuesta;
+            using (var conexionSql = await Utilidades.ObtenerConexionAsync())
             {
-                string consultaSql = "DELETE FROM Producto WHERE ID_Producto = @idProducto";
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
+                try
+                {
+                    string consultaSql = "DELETE FROM Producto WHERE ID_Producto = @idProducto";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        comandoSql.Parameters.AddWithValue("@idProducto", producto.IdProducto);
 
-                comandoSql.Parameters.AddWithValue("@idProducto", producto.IdProducto);
-
-                respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo eliminar el registro";
-            }
-            catch (Exception ex)
-            {
-                respuesta = ex.Message; // Consider logging the exception here.
-            }
-            finally
-            {
-                conexionSql.Close(); // Cerrar la conexión
+                        respuesta = await comandoSql.ExecuteNonQueryAsync() == 1 ? "Ok" : "No se pudo eliminar el registro";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    respuesta = ex.Message; // Consider logging the exception here.
+                }
             }
 
             return respuesta;
@@ -122,26 +116,26 @@ namespace CapaDatos
         #endregion
 
         #region MetodoMostrar
-        public DataTable Mostrar()
+        public async Task<DataTable> MostrarAsync()
         {
             var resultadoTabla = new DataTable("producto");
-            var conexionSql = Utilidades.Conexion();
-
-            try
+            using (var conexionSql = await Utilidades.ObtenerConexionAsync())
             {
-                string consultaSql = "SELECT TOP (1000) [Nombre], [Precio], [Descripción], [ID_Proveedor] FROM [AbarroteDB].[dbo].[Producto]";
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
-
-                SqlDataAdapter sqlDat = new SqlDataAdapter(comandoSql);
-                sqlDat.Fill(resultadoTabla);
-            }
-            catch (Exception)
-            {
-                resultadoTabla = null;
-            }
-            finally
-            {
-                conexionSql.Close(); // Cerrar la conexión
+                try
+                {
+                    string consultaSql = "SELECT TOP (1000) [Nombre], [Precio], [Descripción], [ID_Proveedor] FROM [AbarroteDB].[dbo].[Producto]";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        using (var sqlDat = new SqlDataAdapter(comandoSql))
+                        {
+                            sqlDat.Fill(resultadoTabla);
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    resultadoTabla = null;
+                }
             }
 
             return resultadoTabla;
@@ -149,31 +143,32 @@ namespace CapaDatos
         #endregion
 
         #region MetodoBuscarNombre
-        public DataTable BuscarNombre(string nombre)
+        public async Task<DataTable> BuscarNombreAsync(string nombre)
         {
             var resultadoTabla = new DataTable("producto");
-            var conexionSql = Utilidades.Conexion();
-
-            try
+            using (var conexionSql = await Utilidades.ObtenerConexionAsync())
             {
-                string consultaSql = "SELECT TOP (1000) [ID_Producto], [Nombre], [Precio], [Descripcion], [ID_Proveedor] FROM [AbarroteDB].[dbo].[Producto] WHERE Nombre LIKE @nombre + '%'";
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
-
-                comandoSql.Parameters.AddWithValue("@nombre", nombre);
-                SqlDataAdapter sqlDat = new SqlDataAdapter(comandoSql);
-                sqlDat.Fill(resultadoTabla);
-            }
-            catch (Exception)
-            {
-                resultadoTabla = null;
-            }
-            finally
-            {
-                conexionSql.Close(); // Cerrar la conexión
+                try
+                {
+                    string consultaSql = "SELECT TOP (1000) [ID_Producto], [Nombre], [Precio], [Descripcion], [ID_Proveedor] FROM [AbarroteDB].[dbo].[Producto] WHERE Nombre LIKE @nombre + '%'";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        comandoSql.Parameters.AddWithValue("@nombre", nombre);
+                        using (var sqlDat = new SqlDataAdapter(comandoSql))
+                        {
+                            sqlDat.Fill(resultadoTabla);
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    resultadoTabla = null;
+                }
             }
 
             return resultadoTabla;
         }
         #endregion
+
     }
 }

@@ -22,12 +22,12 @@ namespace Interfaz
             ConfigurarDataGridView();
         }
 
-        private void CargarProductosDesdeBD()
+        private async void CargarProductosDesdeBD()
         {
             SqlConnection connection = null; // Declarar la conexión fuera del bloque using
             try
             {
-                connection = Utilidades.Conexion(); // Inicializar la conexión
+                connection = await Utilidades.ObtenerConexionAsync(); // Inicializar la conexión
                                                     // connection.Open(); // No es necesario abrirla explícitamente, se maneja en Utilidades.Conexion()
 
                 string query = "SELECT ID_Producto, Nombre, Precio, Descripción FROM Producto";
@@ -59,12 +59,12 @@ namespace Interfaz
             }
         }
 
-        private void CargarClientesDB()
+        private async void CargarClientesDB()
         {
             SqlConnection connection = null; // Declarar la conexión fuera del bloque using
             try
             {
-                connection = Utilidades.Conexion(); // Inicializar la conexión
+                connection = await Utilidades.ObtenerConexionAsync(); // Inicializar la conexión
                                                     // connection.Open(); // No es necesario abrirla explícitamente, se maneja en Utilidades.Conexion()
 
                 string query = "SELECT [ID_Cliente], [Nombre] FROM [AbarroteDB].[dbo].[Cliente]";
@@ -96,7 +96,7 @@ namespace Interfaz
             }
         }
 
-        private void CargarDetallesVenta(string nombreProducto, string nombreCliente)
+        private async void CargarDetallesVenta(string nombreProducto, string nombreCliente)
         {
             string query = @"
             SELECT 
@@ -116,7 +116,7 @@ namespace Interfaz
 
             try
             {
-                using (SqlConnection connection = Utilidades.Conexion())
+                using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@NombreProducto", nombreProducto);

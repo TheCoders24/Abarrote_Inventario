@@ -12,43 +12,44 @@ namespace CapaNegocio
     {
 
         #region InsertarProducto
-        public static string InsertarProducto(string nombre, decimal precio, string descripcion, int idProveedor)
+        public static async Task<string> InsertarProductoAsync(string nombre, decimal precio, string descripcion, int idProveedor)
         {
             DProductos producto = new DProductos(0, nombre, precio, descripcion, idProveedor);
-            return producto.Insertar(producto);
+            return await producto.InsertarAsync(producto);
         }
         #endregion
 
         #region EditarProducto
-        public static string EditarProducto(int idProducto, string nombre, decimal precio, string descripcion, int idProveedor)
+        public static async Task<string> EditarProductoAsync(int idProducto, string nombre, decimal precio, string descripcion, int idProveedor)
         {
             DProductos producto = new DProductos(idProducto, nombre, precio, descripcion, idProveedor);
-            return producto.Editar(producto);
+            return await producto.EditarAsync(producto);
         }
         #endregion
 
         #region EliminarProducto
-        public static string EliminarProducto(int idProducto)
+        public static async Task<string> EliminarProductoAsync(int idProducto)
         {
             DProductos producto = new DProductos(idProducto, string.Empty, 0, string.Empty, 0);
-            return producto.Eliminar(producto);
+            return await producto.EliminarAsync(producto);
         }
         #endregion
 
         #region MostrarProductos
-        public static DataTable MostrarProductos()
+        public static async Task<DataTable> MostrarProductosAsync()
         {
             DProductos repo = new DProductos(0, string.Empty, 0, string.Empty, 0);
-            return repo.Mostrar();
+            return await repo.MostrarAsync();
         }
         #endregion
 
         #region BuscarNombreProducto
-        public static DataTable BuscarNombreProducto(string textoBuscar)
+        public static async Task<DataTable> BuscarNombreProductoAsync(string textoBuscar)
         {
             DProductos repo = new DProductos(0, textoBuscar, 0, string.Empty, 0);
-            return repo.BuscarNombre(textoBuscar);
+            return await repo.BuscarNombreAsync(textoBuscar);
         }
         #endregion
+
     }
 }

@@ -26,130 +26,174 @@ namespace CapaDatos
             Direccion = direccion;
         }
 
-
-        public string Insertar(DProveedores proveedor)
+        #region MetodoInsertar
+        public async Task<string> InsertarAsync(DProveedores proveedor)
         {
             string respuesta = "";
-            var conexionSql = Utilidades.Conexion();
 
             try
             {
-                string consultaSql = "INSERT INTO Proveedor (Nombre, Telefono, Dirección) VALUES (@nombre, @telefono, @direccion)";
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
-                comandoSql.Parameters.Add("@nombre", SqlDbType.VarChar).Value = proveedor.Nombre;
-                comandoSql.Parameters.Add("@telefono", SqlDbType.VarChar).Value = proveedor.Telefono;
-                comandoSql.Parameters.Add("@direccion", SqlDbType.VarChar).Value = proveedor.Direccion;
+                using (var conexionSql = await Utilidades.ObtenerConexionAsync())
+                {
+                    if (conexionSql == null)
+                    {
+                        throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
+                    }
 
-                respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo insertar el registro";
+                    string consultaSql = "INSERT INTO Proveedor (Nombre, Telefono, Dirección) VALUES (@nombre, @telefono, @direccion)";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        comandoSql.Parameters.Add("@nombre", SqlDbType.VarChar).Value = proveedor.Nombre;
+                        comandoSql.Parameters.Add("@telefono", SqlDbType.VarChar).Value = proveedor.Telefono;
+                        comandoSql.Parameters.Add("@direccion", SqlDbType.VarChar).Value = proveedor.Direccion;
+
+                        respuesta = await comandoSql.ExecuteNonQueryAsync() == 1 ? "Ok" : "No se pudo insertar el registro";
+                    }
+                }
             }
             catch (Exception ex)
             {
-                respuesta = ex.Message;
+                respuesta = "Ocurrió un error: " + ex.Message; // Manejo de excepciones
             }
-            finally
-            {
-                conexionSql.Close(); // Asegúrate de cerrar la conexión
-            }
+
             return respuesta;
         }
+        #endregion
 
-        public string Editar(DProveedores proveedor)
+        #region MetodoEditar
+        public async Task<string> EditarAsync(DProveedores proveedor)
         {
             string respuesta = "";
-            var conexionSql = Utilidades.Conexion();
 
             try
             {
-                string consultaSql = "UPDATE Proveedor SET Nombre = @nombre, Telefono = @telefono, Direccion = @direccion WHERE ID_Proveedor = @idproveedor";
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
-                comandoSql.Parameters.Add("@idproveedor", SqlDbType.Int).Value = proveedor.IDProveedor;
-                comandoSql.Parameters.Add("@nombre", SqlDbType.VarChar).Value = proveedor.Nombre;
-                comandoSql.Parameters.Add("@telefono", SqlDbType.VarChar).Value = proveedor.Telefono;
-                comandoSql.Parameters.Add("@direccion", SqlDbType.VarChar).Value = proveedor.Direccion;
+                using (var conexionSql = await Utilidades.ObtenerConexionAsync())
+                {
+                    if (conexionSql == null)
+                    {
+                        throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
+                    }
 
-                respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo editar el registro";
+                    string consultaSql = "UPDATE Proveedor SET Nombre = @nombre, Telefono = @telefono, Dirección = @direccion WHERE ID_Proveedor = @idproveedor";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        comandoSql.Parameters.Add("@idproveedor", SqlDbType.Int).Value = proveedor.IDProveedor;
+                        comandoSql.Parameters.Add("@nombre", SqlDbType.VarChar).Value = proveedor.Nombre;
+                        comandoSql.Parameters.Add("@telefono", SqlDbType.VarChar).Value = proveedor.Telefono;
+                        comandoSql.Parameters.Add("@direccion", SqlDbType.VarChar).Value = proveedor.Direccion;
+
+                        respuesta = await comandoSql.ExecuteNonQueryAsync() == 1 ? "Ok" : "No se pudo editar el registro";
+                    }
+                }
             }
             catch (Exception ex)
             {
-                respuesta = ex.Message;
+                respuesta = "Ocurrió un error: " + ex.Message; // Manejo de excepciones
             }
-            finally
-            {
-                conexionSql.Close(); // Asegúrate de cerrar la conexión
-            }
+
             return respuesta;
         }
+        #endregion
 
-        public string Eliminar(DProveedores proveedor)
+        #region MetodoEliminar
+        public async Task<string> EliminarAsync(DProveedores proveedor)
         {
             string respuesta = "";
-            var conexionSql = Utilidades.Conexion();
 
             try
             {
-                string consultaSql = "DELETE FROM Proveedor WHERE ID_Proveedor = @idproveedor";
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
-                comandoSql.Parameters.AddWithValue("@idproveedor", proveedor.IDProveedor);
+                using (var conexionSql = await Utilidades.ObtenerConexionAsync())
+                {
+                    if (conexionSql == null)
+                    {
+                        throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
+                    }
 
-                respuesta = comandoSql.ExecuteNonQuery() == 1 ? "Ok" : "No se pudo eliminar el registro";
+                    string consultaSql = "DELETE FROM Proveedor WHERE ID_Proveedor = @idproveedor";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        comandoSql.Parameters.AddWithValue("@idproveedor", proveedor.IDProveedor);
+                        respuesta = await comandoSql.ExecuteNonQueryAsync() == 1 ? "Ok" : "No se pudo eliminar el registro";
+                    }
+                }
             }
             catch (Exception ex)
             {
-                respuesta = ex.Message;
+                respuesta = "Ocurrió un error: " + ex.Message; // Manejo de excepciones
             }
-            finally
-            {
-                conexionSql.Close(); // Asegúrate de cerrar la conexión
-            }
+
             return respuesta;
         }
+        #endregion
 
-        public DataTable Mostrar()
+        #region MetodoMostrar
+        public async Task<DataTable> MostrarAsync()
         {
             var resultadoTabla = new DataTable("Proveedor");
-            var conexionSql = Utilidades.Conexion();
 
             try
             {
-                string consultaSql = "SELECT Nombre, Telefono, Dirección FROM Proveedor";
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
-                var sqlDat = new SqlDataAdapter(comandoSql);
-                sqlDat.Fill(resultadoTabla);
-            }
-            catch (Exception ex)
-            {
-                resultadoTabla = null; // Consider logging the error
-            }
-            finally
-            {
-                conexionSql.Close(); // Asegúrate de cerrar la conexión
-            }
-            return resultadoTabla;
-        }
+                using (var conexionSql = await Utilidades.ObtenerConexionAsync())
+                {
+                    if (conexionSql == null || conexionSql.State != ConnectionState.Open)
+                    {
+                        throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
+                    }
 
-        public DataTable BuscarNombre(string nombre)
+                    string consultaSql = "SELECT Nombre, Telefono, Dirección FROM Proveedor";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        using (var sqlDat = new SqlDataAdapter(comandoSql))
+                        {
+                            await Task.Run(() => sqlDat.Fill(resultadoTabla)); // Llena la tabla con los datos obtenidos de la consulta
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                resultadoTabla = null; // Retorna null si ocurre un error
+            }
+
+            return resultadoTabla; // Devuelve la tabla con los resultados
+        }
+        #endregion
+
+        #region MetodoBuscarNombre
+        public async Task<DataTable> BuscarNombreAsync(string nombre)
         {
             var resultadoTabla = new DataTable("Proveedor");
-            var conexionSql = Utilidades.Conexion();
 
             try
             {
-                string consultaSql = "SELECT ID_Proveedor, Nombre, Telefono, Direccion FROM Proveedor WHERE Nombre LIKE @textobuscar + '%'";
-                var comandoSql = new SqlCommand(consultaSql, conexionSql);
-                comandoSql.Parameters.Add("@textobuscar", SqlDbType.VarChar).Value = nombre;
+                using (var conexionSql = await Utilidades.ObtenerConexionAsync())
+                {
+                    if (conexionSql == null)
+                    {
+                        throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
+                    }
 
-                var sqlDat = new SqlDataAdapter(comandoSql);
-                sqlDat.Fill(resultadoTabla);
+                    string consultaSql = "SELECT ID_Proveedor, Nombre, Telefono, Dirección FROM Proveedor WHERE Nombre LIKE @textobuscar + '%'";
+                    using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
+                    {
+                        comandoSql.Parameters.Add("@textobuscar", SqlDbType.VarChar).Value = nombre;
+
+                        using (var sqlDat = new SqlDataAdapter(comandoSql))
+                        {
+                            await Task.Run(() => sqlDat.Fill(resultadoTabla)); // Llena la tabla con los datos obtenidos de la consulta
+                        }
+                    }
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                resultadoTabla = null; // Consider logging the error
+                resultadoTabla = null; // Retorna null en caso de error
             }
-            finally
-            {
-                conexionSql.Close(); // Asegúrate de cerrar la conexión
-            }
-            return resultadoTabla;
+
+            return resultadoTabla; // Devuelve la tabla con los resultados
         }
+        #endregion
+
+
     }
 }

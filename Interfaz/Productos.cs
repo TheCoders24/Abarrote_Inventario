@@ -22,14 +22,14 @@ namespace Interfaz
         {
             MostrarDatos();
         }
-        public void MostrarDatos()
+        public async void MostrarDatos()
         {
             try
             {
-                var proveedores = NProductos.MostrarProductos();
+                var proveedores =await NProductos.MostrarProductosAsync();
                 if (proveedores != null)
                 {
-                    dataListado.DataSource = NProductos.MostrarProductos();
+                    dataListado.DataSource = NProductos.MostrarProductosAsync();
                 }
                 else
                 {
@@ -42,19 +42,42 @@ namespace Interfaz
             }
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private async void btnGuardar_Click(object sender, EventArgs e)
         {
-            int idproducto;
 
-            // Primero intentamos hacer el TryParse
-            if (int.TryParse(txtIdProducto.Text, out idproducto))
+            int idproducto;
+            int idprovedores;
+
+            // Intentamos hacer el TryParse para el ID del producto y del proveedor
+            if (int.TryParse(textBox1.Text, out idprovedores)) // Asegúrate de que `textBox1` es el nombre correcto de tu TextBox para el ID del proveedor
             {
                 try
                 {
-                    // Llamamos a la función para insertar el cliente si el ID es válido
-                    string resultado = NProveedores.InsertarProveedor(idproducto, txtNombre.Text, txtPrecio.Text, txtDescripcion.Text);
+                    // Validamos que los campos de texto no estén vacíos
+                    if (string.IsNullOrWhiteSpace(txtNombre.Text))
+                    {
+                        MessageBox.Show("El nombre del producto no puede estar vacío.");
+                        return;
+                    }
 
-                    // Opcional: mostrar un mensaje si la inserción fue exitosa
+                    if (string.IsNullOrWhiteSpace(txtDescripcion.Text))
+                    {
+                        MessageBox.Show("La descripción del producto no puede estar vacía.");
+                        return;
+                    }
+
+                    // Asegúrate de que txtPrecio.Text puede ser convertido a decimal
+                    decimal precio;
+                    if (string.IsNullOrWhiteSpace(txtPrecio.Text) || !decimal.TryParse(txtPrecio.Text, out precio))
+                    {
+                        MessageBox.Show("El precio ingresado no es válido.");
+                        return; // Salimos del método si el precio no es válido
+                    }
+
+                    // Llamamos a la función para insertar el producto si el ID es válido
+                    string resultado = await NProductos.InsertarProductoAsync(txtNombre.Text, precio, txtDescripcion.Text, idprovedores);
+
+                    // Mostrar un mensaje si la inserción fue exitosa
                     MessageBox.Show(resultado == "Ok" ? "Producto insertado correctamente" : "No se pudo insertar el Producto");
                 }
                 catch (Exception ex)
@@ -65,8 +88,9 @@ namespace Interfaz
             else
             {
                 // Mostramos un mensaje si el ID no es válido
-                MessageBox.Show("El ID del Proveedor no es válido");
+                MessageBox.Show("El ID del Producto o del Proveedor no es válido");
             }
+
         }
     }
 }

@@ -18,15 +18,20 @@ namespace Interfaz
         public LoginSesion()
         {
             InitializeComponent();
+            // Asignamos valores depues de la validacion
+          
         }
+        public static string _user {  get; set; }
+        public static string _password { get; set; }
+
         Utilidades Utilidades = new Utilidades();   
         private void btnEntrar_Click(object sender, EventArgs e)
         {
             try
             {
                 NLogin nLogin = new NLogin();
-                string _user = tbUsuario.Text.Trim();
-                string _password = tbContrasena.Text.Trim();
+                 _user = tbUsuario.Text.Trim();
+                 _password = tbContrasena.Text.Trim();
                
                 
                 if (string.IsNullOrEmpty(_user) || string.IsNullOrEmpty(_password))
@@ -34,9 +39,13 @@ namespace Interfaz
                     MessageBox.Show("Usuario y contraseña esta vacios compruebe las credenciales");
                 }
 
-                // Asignamos valores depues de la validacion
+
                 Utilidades.SqlUserId = _user;
                 Utilidades.SqlPassword = _password;
+
+                MessageBox.Show(Utilidades.SqlUserId);
+                MessageBox.Show(Utilidades.SqlPassword);
+
 
                 bool loginExitoso = nLogin.IniciarSesion(_user, _password);
 
@@ -64,6 +73,11 @@ namespace Interfaz
         {
             this.Close();
             Hide();
+        }
+
+        private void LoginSesion_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

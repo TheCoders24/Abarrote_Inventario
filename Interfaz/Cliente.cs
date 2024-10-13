@@ -1,4 +1,5 @@
-﻿using CapaNegocio;
+﻿using CapaDatos;
+using CapaNegocio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,11 +29,11 @@ namespace Interfaz
            MostrarDatos();
         }
 
-        public void MostrarDatos()
+        public async void MostrarDatos()
         {
             try
             {
-                    dataListado.DataSource = NCliente.Mostrar();
+                    dataListado.DataSource = await NCliente.MostrarClientesAsync();
             }
             catch (Exception ex)
             {
@@ -40,7 +41,7 @@ namespace Interfaz
             }
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private async void btnGuardar_Click(object sender, EventArgs e)
         {
             int idCliente;
 
@@ -49,11 +50,13 @@ namespace Interfaz
             {
                 try
                 {
+                    NLogger.LogInfo("iniciando operaciones en la base de datos");
                     // Llamamos a la función para insertar el cliente si el ID es válido
-                    string resultado = NCliente.InsertarCliente(idCliente, txtNombre.Text, txtDireccion.Text, mtxtTelefono.Text);
+                    string resultado = await NCliente.InsertarClienteAsync(idCliente, txtNombre.Text, txtDireccion.Text, mtxtTelefono.Text);
 
                     // Opcional: mostrar un mensaje si la inserción fue exitosa
                     MessageBox.Show(resultado == "Ok" ? "Cliente insertado correctamente" : "No se pudo insertar el cliente");
+                    NLogger.LogInfo("Operación en la base de datos completada con éxito.");
                 }
                 catch (Exception ex)
                 {
@@ -67,7 +70,7 @@ namespace Interfaz
             }
         }
 
-        private void btnEditar_Click(object sender, EventArgs e)
+        private async void btnEditar_Click(object sender, EventArgs e)
         {
             int idCliente; // Suponiendo que ya tienes el ID del cliente a actualizar
 
@@ -75,8 +78,10 @@ namespace Interfaz
             {
                 try
                 {
-                    string resultado = NCliente.EditarCliente(idCliente, txtNombre.Text, txtDireccion.Text, mtxtTelefono.Text);
+                    NLogger.LogInfo("iniciando operaciones en la base de datos");
+                    string resultado = await NCliente.EditarClienteAsync(idCliente, txtNombre.Text, txtDireccion.Text, mtxtTelefono.Text);
                     MessageBox.Show(resultado == "Ok" ? "Cliente actualizado correctamente" : "No se pudo actualizar el cliente");
+                    NLogger.LogInfo("Operación en la base de datos completada con éxito.");
                 }
                 catch (Exception ex)
                 {
@@ -90,26 +95,17 @@ namespace Interfaz
 
         }
 
-        private void btnEliminar_Click(object sender, EventArgs e)
+        private async void btnEliminar_Click(object sender, EventArgs e)
         {
-            int idCliente; // Suponiendo que ya tienes el ID del cliente a eliminar
 
-            if (int.TryParse(txtIdCliente.Text, out idCliente))
-            {
-                try
-                {
-                    string resultado = NCliente.Eliminar(idCliente);
-                    MessageBox.Show(resultado == "Ok" ? "Cliente eliminado correctamente" : "No se pudo eliminar el cliente");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Ocurrió un error al eliminar el cliente: " + ex.Message);
-                }
-            }
-            else
-            {
-                MessageBox.Show("El ID del cliente no es válido");
-            }
+            // Obtiene el nombre del cliente desde el TextBox
+            string nombre = txtNombre.Text;
+
+            // Llama al método EliminarClienteAsync de forma asíncrona
+            string resultado = await NCliente.EliminarClienteAsync(nombre);
+
+            // Muestra el resultado en un MessageBox
+            MessageBox.Show(resultado);
 
         }
 

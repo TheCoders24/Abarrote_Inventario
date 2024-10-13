@@ -33,10 +33,10 @@ namespace Interfaz
         {
             try
             {
-                var proveedores = NProveedores.MostrarProveedores();
+                var proveedores = NProveedores.MostrarProveedoresAsync();
                 if (proveedores != null)
                 {
-                    dataListado.DataSource = NProveedores.MostrarProveedores();
+                    dataListado.DataSource = NProveedores.MostrarProveedoresAsync();
                     
                 }
                 else
@@ -56,7 +56,7 @@ namespace Interfaz
 
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private async void btnGuardar_Click(object sender, EventArgs e)
         {
             int idProveedor;
 
@@ -66,7 +66,7 @@ namespace Interfaz
                 try
                 {
                     // Llamamos a la función para insertar el cliente si el ID es válido
-                    string resultado = NProveedores.InsertarProveedor(idProveedor,txtNombre.Text, txtDireccion.Text, mtxtTelefono.Text);
+                    string resultado = await NProveedores.InsertarProveedorAsync(idProveedor, txtNombre.Text, txtDireccion.Text, mtxtTelefono.Text);
 
                     // Opcional: mostrar un mensaje si la inserción fue exitosa
                     MessageBox.Show(resultado == "Ok" ? "Proveedor insertado correctamente" : "No se pudo insertar el Proveedor");
@@ -83,7 +83,7 @@ namespace Interfaz
             }
         }
 
-        private void btnEditar_Click(object sender, EventArgs e)
+        private async void btnEditar_Click(object sender, EventArgs e)
         {
             int idProveedor; // Suponiendo que ya tienes el ID del cliente a actualizar
 
@@ -91,7 +91,7 @@ namespace Interfaz
             {
                 try
                 {
-                    string resultado = NProveedores.EditarProveedor(idProveedor, txtNombre.Text, txtDireccion.Text, mtxtTelefono.Text);
+                    string resultado = await NProveedores.EditarProveedorAsync(idProveedor, txtNombre.Text, txtDireccion.Text, mtxtTelefono.Text);
                     MessageBox.Show(resultado == "Ok" ? "Proveedor actualizado correctamente" : "No se pudo actualizar el Proveedor");
                 }
                 catch (Exception ex)
@@ -105,7 +105,7 @@ namespace Interfaz
             }
         }
 
-        private void btnEliminar_Click(object sender, EventArgs e)
+        private async void btnEliminar_Click(object sender, EventArgs e)
         {
             int idProveedor; // Suponiendo que ya tienes el ID del cliente a eliminar
 
@@ -113,7 +113,7 @@ namespace Interfaz
             {
                 try
                 {
-                    string resultado = NProveedores.EliminarProveedor (idProveedor);
+                    string resultado = await NProveedores.EliminarProveedorAsync (idProveedor);
                     MessageBox.Show(resultado == "Ok" ? "Proveedor eliminado correctamente" : "No se pudo eliminar el Proveedor");
                 }
                 catch (Exception ex)
