@@ -35,6 +35,7 @@
             this.btnInventario = new System.Windows.Forms.Button();
             this.btnDetallesIvnetario = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.btnsaldo = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnproductos
@@ -121,12 +122,25 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btnsaldo
+            // 
+            this.btnsaldo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnsaldo.Location = new System.Drawing.Point(159, 240);
+            this.btnsaldo.Margin = new System.Windows.Forms.Padding(2);
+            this.btnsaldo.Name = "btnsaldo";
+            this.btnsaldo.Size = new System.Drawing.Size(115, 32);
+            this.btnsaldo.TabIndex = 7;
+            this.btnsaldo.Text = "Saldo";
+            this.btnsaldo.UseVisualStyleBackColor = true;
+            this.btnsaldo.Click += new System.EventHandler(this.btnsaldo_Click);
+            // 
             // MenuPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(305, 321);
+            this.Controls.Add(this.btnsaldo);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnDetallesIvnetario);
             this.Controls.Add(this.btnInventario);
@@ -151,5 +165,6 @@
         private System.Windows.Forms.Button btnInventario;
         private System.Windows.Forms.Button btnDetallesIvnetario;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnsaldo;
     }
 }

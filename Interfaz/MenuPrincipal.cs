@@ -64,5 +64,11 @@ namespace Interfaz
             ReporteForms reporte = new ReporteForms();
             reporte.ShowDialog();
         }
+
+        private void btnsaldo_Click(object sender, EventArgs e)
+        {
+            Saldos saldos = new Saldos();
+            saldos.ShowDialog();
+        }
     }
 }

@@ -187,7 +187,6 @@ namespace Interfaz
 
         public async Task CargarDetallesVenta(string nombreProducto, string nombreCliente, int cantidad, decimal preciounitario)
         {
-
             // Validaciones de los datos
             if (string.IsNullOrWhiteSpace(nombreProducto))
             {
@@ -215,31 +214,23 @@ namespace Interfaz
 
             // Cálculo del subtotal
             decimal subtotal = cantidad * preciounitario;
-            txtsubtotal.Text = subtotal.ToString("F2"); // Formato a dos decimales
+            txtsubtotal.Text = subtotal.ToString();
 
-            // Consulta para insertar en DetalleVenta
+            // Consulta SQL para insertar en Venta
+            string queryInsertVenta = @"
+            INSERT INTO Venta (Fecha, Importe, Iva, Total, Método_Pago, ID_Cliente)
+            OUTPUT INSERTED.ID_Venta
+            VALUES (@Fecha, @Importe, @Iva, @Total, @MetodoPago, @ID_Cliente);";
+
+            // Consulta SQL para insertar en DetalleVenta
             string queryInsertDetalle = @"
             INSERT INTO DetalleVenta (ID_Producto, ID_Venta, Cantidad, Precio_Unitario, Subtotal)
             VALUES (@ID_Producto, @ID_Venta, @Cantidad, @PrecioUnitario, @Subtotal);";
 
-            // Consulta para obtener IDs
+            // Consulta SQL para obtener los IDs
             string queryObtenerIDs = @"
-            DECLARE @ClienteID INT, @ProductoID INT;
-
-            SELECT @ClienteID = ID_Cliente FROM Cliente WHERE Nombre = @NombreCliente;
-            SELECT @ProductoID = ID_Producto FROM Producto WHERE Nombre = @NombreProducto;
-
-            IF @ClienteID IS NULL
-            BEGIN
-                RAISERROR('El cliente no existe en la base de datos.', 16, 1);
-            END
-
-            IF @ProductoID IS NULL
-            BEGIN
-                RAISERROR('El producto no existe en la base de datos.', 16, 1);
-            END
-
-            SELECT @ProductoID AS ID_Producto;"; // Eliminamos la selección de ID_Venta aquí
+            SELECT ID_Cliente FROM Cliente WHERE Nombre = @NombreCliente;
+            SELECT ID_Producto FROM Producto WHERE Nombre = @NombreProducto;";
 
             try
             {
@@ -263,7 +254,7 @@ namespace Interfaz
                                 return;
                             }
 
-                            // Obtener ID de producto
+                            // Obtener ID del producto
                             int idProducto;
                             using (SqlCommand commandObtenerIDs = new SqlCommand(queryObtenerIDs, connection, transaction))
                             {
@@ -274,7 +265,16 @@ namespace Interfaz
                                 {
                                     if (reader.Read())
                                     {
-                                        idProducto = reader.GetInt32(reader.GetOrdinal("ID_Producto"));
+                                        // Leer el ID del producto
+                                        if (reader.NextResult() && reader.Read())
+                                        {
+                                            idProducto = reader.GetInt32(0); // Obtener el ID del producto
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("No se encontró el producto.");
+                                            return;
+                                        }
                                     }
                                     else
                                     {
@@ -284,38 +284,45 @@ namespace Interfaz
                                 }
                             }
 
-                            // Obtener ID de venta, si no hay, se deja como null
-                            int? idVenta = await ObtenerSiguienteIdVentaAsync(); // Debes implementar este método
-
-                            // Si no hay venta activa, crear una nueva venta
-                            if (idVenta == null)
+                            // Insertar en la tabla Venta
+                            int idVenta;
+                            using (SqlCommand commandInsertVenta = new SqlCommand(queryInsertVenta, connection, transaction))
                             {
-                                idVenta = await InsertarVentaAsync(clienteId.Value); // Asegúrate de que clienteId no sea null aquí
+                                // Parámetros para la tabla Venta
+                                commandInsertVenta.Parameters.AddWithValue("@Fecha", DateTime.Now);
+                                commandInsertVenta.Parameters.AddWithValue("@Importe", subtotal);
+                                commandInsertVenta.Parameters.AddWithValue("@Iva", 0.16m * subtotal); // Asumiendo un IVA del 16%
+                                commandInsertVenta.Parameters.AddWithValue("@Total", 1.16m * subtotal);
+                                commandInsertVenta.Parameters.AddWithValue("@MetodoPago", "Efectivo"); // Puedes cambiar el método de pago según la selección
+                                commandInsertVenta.Parameters.AddWithValue("@ID_Cliente", clienteId.Value);
+
+                                // Obtener el ID de la venta recién insertada
+                                idVenta = (int)await commandInsertVenta.ExecuteScalarAsync();
                             }
 
-                            // Inserción de los detalles de la venta
-                            using (SqlCommand commandInsert = new SqlCommand(queryInsertDetalle, connection, transaction))
+                            // Insertar en la tabla DetalleVenta
+                            using (SqlCommand commandInsertDetalle = new SqlCommand(queryInsertDetalle, connection, transaction))
                             {
-                                commandInsert.Parameters.AddWithValue("@ID_Venta", idVenta.Value);
-                                commandInsert.Parameters.AddWithValue("@ID_Producto", idProducto);
-                                commandInsert.Parameters.AddWithValue("@Cantidad", cantidad);
-                                commandInsert.Parameters.AddWithValue("@PrecioUnitario", preciounitario);
-                                commandInsert.Parameters.AddWithValue("@Subtotal", subtotal);
+                                commandInsertDetalle.Parameters.AddWithValue("@ID_Venta", idVenta);
+                                commandInsertDetalle.Parameters.AddWithValue("@ID_Producto", idProducto);
+                                commandInsertDetalle.Parameters.AddWithValue("@Cantidad", cantidad);
+                                commandInsertDetalle.Parameters.AddWithValue("@PrecioUnitario", preciounitario);
+                                commandInsertDetalle.Parameters.AddWithValue("@Subtotal", subtotal);
 
-                                int filasAfectadas = await commandInsert.ExecuteNonQueryAsync();
+                                int filasAfectadas = await commandInsertDetalle.ExecuteNonQueryAsync();
                                 MessageBox.Show($"Filas afectadas por la inserción: {filasAfectadas}");
 
                                 if (filasAfectadas == 0)
                                 {
-                                    MessageBox.Show("No se pudo insertar el detalle de la venta. Verifica si el producto y el cliente existen.");
+                                    MessageBox.Show("No se pudo insertar el detalle de la venta.");
                                     transaction.Rollback();
                                     return;
                                 }
                             }
 
-                            // Si llegamos aquí, se realizó todo correctamente
+                            // Si todo va bien, hacer commit
                             transaction.Commit();
-                            MessageBox.Show("Detalle de venta insertado correctamente.");
+                            MessageBox.Show("Venta y detalle insertados correctamente.");
                         }
                         catch (SqlException sqlEx)
                         {
@@ -334,7 +341,6 @@ namespace Interfaz
             {
                 MessageBox.Show("Error general: " + ex.Message);
             }
-
 
         }
 
