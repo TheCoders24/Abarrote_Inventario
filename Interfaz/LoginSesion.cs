@@ -43,8 +43,8 @@ namespace Interfaz
                 Utilidades.SqlUserId = _user;
                 Utilidades.SqlPassword = _password;
 
-                MessageBox.Show(Utilidades.SqlUserId);
-                MessageBox.Show(Utilidades.SqlPassword);
+                //MessageBox.Show(Utilidades.SqlUserId);
+                //MessageBox.Show(Utilidades.SqlPassword);
 
 
                 bool loginExitoso = nLogin.IniciarSesion(_user, _password);

@@ -44,6 +44,7 @@
             this.txtiva = new System.Windows.Forms.TextBox();
             this.txtTotal = new System.Windows.Forms.TextBox();
             this.btnGuardar = new System.Windows.Forms.Button();
+            this.txtFecha = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -182,11 +183,19 @@
             this.btnGuardar.UseVisualStyleBackColor = true;
             this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
             // 
+            // txtFecha
+            // 
+            this.txtFecha.Location = new System.Drawing.Point(598, 13);
+            this.txtFecha.Name = "txtFecha";
+            this.txtFecha.Size = new System.Drawing.Size(100, 20);
+            this.txtFecha.TabIndex = 16;
+            // 
             // DetalleVenta
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 565);
+            this.Controls.Add(this.txtFecha);
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.txtTotal);
             this.Controls.Add(this.txtiva);
@@ -230,5 +239,6 @@
         private System.Windows.Forms.TextBox txtiva;
         private System.Windows.Forms.TextBox txtTotal;
         private System.Windows.Forms.Button btnGuardar;
+        private System.Windows.Forms.TextBox txtFecha;
     }
 }

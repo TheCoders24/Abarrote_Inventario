@@ -20,6 +20,13 @@ namespace Interfaz
             CargarProductosDesdeBD();
             CargarClientesDB();
             ConfigurarDataGridView();
+            Fecha();
+        }
+
+        private void Fecha()
+        {
+            var Fecha = DateTime.Now;
+            txtFecha.Text = Fecha.ToShortDateString();
         }
 
         private async void CargarProductosDesdeBD()
@@ -96,48 +103,239 @@ namespace Interfaz
             }
         }
 
-        private async void CargarDetallesVenta(string nombreProducto, string nombreCliente)
+
+
+        // Función para obtener el ID del cliente por nombre
+        public async Task<int?> ObtenerIdClientePorNombre(string nombreCliente)
+        {
+            string query = "SELECT ID_Cliente FROM Cliente WHERE Nombre = @NombreCliente";
+
+            using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
+            {
+                if (connection == null)
+                {
+                    throw new Exception("Error al establecer conexión con la base de datos.");
+                }
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@NombreCliente", nombreCliente);
+
+                    object resultado = await command.ExecuteScalarAsync();
+                    return resultado != null ? (int?)Convert.ToInt32(resultado) : null; // Retorna el ID o null si no se encuentra
+                }
+            }
+        }
+
+        // Función para obtener el ID del producto por nombre
+        public async Task<int?> ObtenerIdProductoPorNombre(string nombreProducto)
+        {
+            string query = "SELECT ID_Producto FROM Producto WHERE Nombre = @NombreProducto";
+
+            using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
+            {
+                if (connection == null)
+                {
+                    throw new Exception("Error al establecer conexión con la base de datos.");
+                }
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@NombreProducto", nombreProducto);
+
+                    object resultado = await command.ExecuteScalarAsync();
+                    return resultado != null ? (int?)Convert.ToInt32(resultado) : null; // Retorna el ID o null si no se encuentra
+                }
+            }
+        }
+
+        private async Task<int> ObtenerSiguienteIdVentaAsync()
+        {
+            string queryObtenerUltimoId = "SELECT ISNULL(MAX(ID_Venta), 0) + 1 FROM DetalleVenta;";
+
+            using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
+            {
+                if (connection == null)
+                {
+                    throw new InvalidOperationException("Error al establecer conexión con la base de datos.");
+                }
+
+                using (SqlCommand command = new SqlCommand(queryObtenerUltimoId, connection))
+                {
+                    return (int)await command.ExecuteScalarAsync();
+                }
+            }
+        }
+
+        private async Task<int> InsertarVentaAsync(int clienteId)
         {
             string query = @"
-            SELECT 
-                dv.ID_Venta AS ID_DetalleVenta,  -- Asumimos que ID_Venta es un identificador para el detalle de la venta
-                p.Nombre AS Producto,
-                dv.Cantidad,
-                dv.Precio_Unitario AS Importe,
-                (dv.Cantidad * dv.Precio_Unitario) AS Total
-            FROM 
-                DetalleVenta dv
-            JOIN 
-                Producto p ON dv.ID_Producto = p.ID_Producto
-            JOIN 
-                Cliente c ON dv.ID_Cliente = c.ID_Cliente  -- Asumimos que hay una relación entre DetalleVenta y Cliente
-            WHERE 
-                p.Nombre = @NombreProducto AND c.Nombre = @NombreCliente;";
+            INSERT INTO DetalleVenta (ID_Cliente, Fecha_Venta) 
+            OUTPUT INSERTED.ID_Venta 
+            VALUES (@ID_Cliente, GETDATE());"; // Asumiendo que la fecha de venta es la fecha actual
+
+            using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID_Cliente", clienteId);
+                    return (int)await command.ExecuteScalarAsync(); // Devuelve el ID de la venta insertada
+                }
+            }
+        }
+
+
+        public async Task CargarDetallesVenta(string nombreProducto, string nombreCliente, int cantidad, decimal preciounitario)
+        {
+
+            // Validaciones de los datos
+            if (string.IsNullOrWhiteSpace(nombreProducto))
+            {
+                MessageBox.Show("El nombre del producto no puede estar vacío.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(nombreCliente))
+            {
+                MessageBox.Show("El nombre del cliente no puede estar vacío.");
+                return;
+            }
+
+            if (cantidad <= 0)
+            {
+                MessageBox.Show("La cantidad debe ser mayor que cero.");
+                return;
+            }
+
+            if (preciounitario <= 0)
+            {
+                MessageBox.Show("El precio unitario debe ser mayor que cero.");
+                return;
+            }
+
+            // Cálculo del subtotal
+            decimal subtotal = cantidad * preciounitario;
+            txtsubtotal.Text = subtotal.ToString("F2"); // Formato a dos decimales
+
+            // Consulta para insertar en DetalleVenta
+            string queryInsertDetalle = @"
+            INSERT INTO DetalleVenta (ID_Producto, ID_Venta, Cantidad, Precio_Unitario, Subtotal)
+            VALUES (@ID_Producto, @ID_Venta, @Cantidad, @PrecioUnitario, @Subtotal);";
+
+            // Consulta para obtener IDs
+            string queryObtenerIDs = @"
+            DECLARE @ClienteID INT, @ProductoID INT;
+
+            SELECT @ClienteID = ID_Cliente FROM Cliente WHERE Nombre = @NombreCliente;
+            SELECT @ProductoID = ID_Producto FROM Producto WHERE Nombre = @NombreProducto;
+
+            IF @ClienteID IS NULL
+            BEGIN
+                RAISERROR('El cliente no existe en la base de datos.', 16, 1);
+            END
+
+            IF @ProductoID IS NULL
+            BEGIN
+                RAISERROR('El producto no existe en la base de datos.', 16, 1);
+            END
+
+            SELECT @ProductoID AS ID_Producto;"; // Eliminamos la selección de ID_Venta aquí
 
             try
             {
                 using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
                 {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@NombreProducto", nombreProducto);
-                    command.Parameters.AddWithValue("@NombreCliente", nombreCliente);
+                    if (connection == null)
+                    {
+                        MessageBox.Show("Error al establecer conexión con la base de datos.");
+                        return;
+                    }
 
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable detallesTable = new DataTable();
-                    adapter.Fill(detallesTable);
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Obtener ID del cliente
+                            int? clienteId = await ObtenerIdClientePorNombre(nombreCliente);
+                            if (clienteId == null)
+                            {
+                                MessageBox.Show("El cliente no se encontró en la base de datos.");
+                                return;
+                            }
 
-                    // Limpiar DataGridView previo
-                    dataGridView1.DataSource = null;
-                    dataGridView1.Rows.Clear();
+                            // Obtener ID de producto
+                            int idProducto;
+                            using (SqlCommand commandObtenerIDs = new SqlCommand(queryObtenerIDs, connection, transaction))
+                            {
+                                commandObtenerIDs.Parameters.AddWithValue("@NombreCliente", nombreCliente);
+                                commandObtenerIDs.Parameters.AddWithValue("@NombreProducto", nombreProducto);
 
-                    // Asignar el DataTable al DataGridView
-                    dataGridView1.DataSource = detallesTable;
+                                using (SqlDataReader reader = await commandObtenerIDs.ExecuteReaderAsync())
+                                {
+                                    if (reader.Read())
+                                    {
+                                        idProducto = reader.GetInt32(reader.GetOrdinal("ID_Producto"));
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("No se encontraron resultados para el cliente o el producto.");
+                                        return;
+                                    }
+                                }
+                            }
+
+                            // Obtener ID de venta, si no hay, se deja como null
+                            int? idVenta = await ObtenerSiguienteIdVentaAsync(); // Debes implementar este método
+
+                            // Si no hay venta activa, crear una nueva venta
+                            if (idVenta == null)
+                            {
+                                idVenta = await InsertarVentaAsync(clienteId.Value); // Asegúrate de que clienteId no sea null aquí
+                            }
+
+                            // Inserción de los detalles de la venta
+                            using (SqlCommand commandInsert = new SqlCommand(queryInsertDetalle, connection, transaction))
+                            {
+                                commandInsert.Parameters.AddWithValue("@ID_Venta", idVenta.Value);
+                                commandInsert.Parameters.AddWithValue("@ID_Producto", idProducto);
+                                commandInsert.Parameters.AddWithValue("@Cantidad", cantidad);
+                                commandInsert.Parameters.AddWithValue("@PrecioUnitario", preciounitario);
+                                commandInsert.Parameters.AddWithValue("@Subtotal", subtotal);
+
+                                int filasAfectadas = await commandInsert.ExecuteNonQueryAsync();
+                                MessageBox.Show($"Filas afectadas por la inserción: {filasAfectadas}");
+
+                                if (filasAfectadas == 0)
+                                {
+                                    MessageBox.Show("No se pudo insertar el detalle de la venta. Verifica si el producto y el cliente existen.");
+                                    transaction.Rollback();
+                                    return;
+                                }
+                            }
+
+                            // Si llegamos aquí, se realizó todo correctamente
+                            transaction.Commit();
+                            MessageBox.Show("Detalle de venta insertado correctamente.");
+                        }
+                        catch (SqlException sqlEx)
+                        {
+                            transaction.Rollback();
+                            MessageBox.Show("Error de base de datos: " + sqlEx.Message);
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            MessageBox.Show("Ocurrió un error: " + ex.Message);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar detalles de venta: " + ex.Message);
+                MessageBox.Show("Error general: " + ex.Message);
             }
+
+
         }
 
         private void DetalleVenta_Load(object sender, EventArgs e)
@@ -175,7 +373,7 @@ namespace Interfaz
                 );
             string nombreProducto = comboboxProducto.Text;
             string nombreCliente = comboBoxCliente.Text;
-            CargarDetallesVenta(nombreProducto,nombreCliente);
+            CargarDetallesVenta(nombreProducto,nombreCliente,cantidad,precioUnitario);
         }
 
         private void ConfigurarDataGridView()

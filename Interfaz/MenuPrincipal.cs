@@ -58,5 +58,11 @@ namespace Interfaz
             DetalleVenta detalleVenta = new DetalleVenta();
             detalleVenta.ShowDialog();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ReporteForms reporte = new ReporteForms();
+            reporte.ShowDialog();
+        }
     }
 }
