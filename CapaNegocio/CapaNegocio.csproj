@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Inventariocs.cs" />
     <Compile Include="NCliente.cs" />
     <Compile Include="NLogger.cs" />
     <Compile Include="NLogin.cs" />
