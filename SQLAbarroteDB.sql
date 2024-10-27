@@ -5,7 +5,7 @@ CREATE TABLE Producto (
     ID_Producto INT PRIMARY KEY IDENTITY(1,1),
     Nombre VARCHAR(100) NOT NULL,
     Precio DECIMAL(10, 2) NOT NULL,
-    DescripciÛn VARCHAR(255)
+    Descripci√≥n VARCHAR(255)
 );
 
 -- Tabla Proveedor
@@ -13,7 +13,7 @@ CREATE TABLE Proveedor (
     ID_Proveedor INT PRIMARY KEY IDENTITY(1,1),
     Nombre VARCHAR(100) NOT NULL,
     Telefono VARCHAR(20),
-    DirecciÛn VARCHAR(255)
+    Direcci√≥n VARCHAR(255)
 );
 
 -- Tabla Cliente
@@ -21,7 +21,7 @@ CREATE TABLE Cliente (
     ID_Cliente INT PRIMARY KEY IDENTITY(1,1),
     Nombre VARCHAR(100) NOT NULL,
     Telefono VARCHAR(20),
-    DirecciÛn VARCHAR(255)
+    Direcci√≥n VARCHAR(255)
 );
 
 -- Tabla Venta
@@ -31,7 +31,7 @@ CREATE TABLE Venta (
     Importe DECIMAL(10, 2) NOT NULL,
     Iva DECIMAL(10, 2) NOT NULL,
     Total DECIMAL(10, 2) NOT NULL,
-    MÈtodo_Pago VARCHAR(50),
+    M√©todo_Pago VARCHAR(50),
     ID_Cliente INT,
     CONSTRAINT fk_cliente_venta FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente)
 );
@@ -82,7 +82,7 @@ CREATE TABLE Saldos (
     CONSTRAINT fk_producto_saldos FOREIGN KEY (ID_Producto) REFERENCES Producto(ID_Producto)
 );
 
--- RelaciÛn Producto - Proveedor (Un proveedor puede suministrar muchos productos; un producto es suministrado por un proveedor)
+-- Relaci√≥n Producto - Proveedor (Un proveedor puede suministrar muchos productos; un producto es suministrado por un proveedor)
 ALTER TABLE Producto
 ADD ID_Proveedor INT;
 
@@ -90,12 +90,80 @@ ALTER TABLE Producto
 ADD CONSTRAINT fk_producto_proveedor FOREIGN KEY (ID_Proveedor) REFERENCES Proveedor(ID_Proveedor);
 
 
--- RelaciÛn Producto - Venta (Un producto puede ser vendido en muchas ventas; una venta puede incluir muchos productos) ya est· establecida en DetalleVenta
+-- Relaci√≥n Producto - Venta (Un producto puede ser vendido en muchas ventas; una venta puede incluir muchos productos) ya est√° establecida en DetalleVenta
 
--- RelaciÛn Cliente - Venta (Un cliente puede realizar muchas compras; una venta est· asociada a un solo cliente) ya est· establecida en Venta
+-- Relaci√≥n Cliente - Venta (Un cliente puede realizar muchas compras; una venta est√° asociada a un solo cliente) ya est√° establecida en Venta
 
--- RelaciÛn Producto - Inventario (Un producto tiene varios registros de inventario en diferentes fechas) ya est· establecida en DetalleInventario
+-- Relaci√≥n Producto - Inventario (Un producto tiene varios registros de inventario en diferentes fechas) ya est√° establecida en DetalleInventario
 
--- RelaciÛn Inventario - Proveedor (El inventario se actualiza cada vez que un proveedor entrega productos) ya est· establecida en Inventario
+-- Relaci√≥n Inventario - Proveedor (El inventario se actualiza cada vez que un proveedor entrega productos) ya est√° establecida en Inventario
 
--- RelaciÛn Producto - Saldos (Cada producto tiene un saldo que refleja sus existencias actuales, actualizadas conforme a las entradas y salidas) ya est· establecida en Saldos
+-- Relaci√≥n Producto - Saldos (Cada producto tiene un saldo que refleja sus existencias actuales, actualizadas conforme a las entradas y salidas) ya est√° establecida en Saldos
+
+-- Registrar venta
+CREATE PROCEDURE usp_RegistrarVenta
+    @Fecha DATE,
+    @Importe DECIMAL(10, 2),
+    @Iva DECIMAL(10, 2),
+    @Total DECIMAL(10, 2),
+    @Metodo_Pago VARCHAR(50),
+    @ID_Cliente INT,
+    @ID_Producto INT,
+    @Cantidad INT,
+    @Precio_Unitario DECIMAL(10, 2),
+    @Resultado INT OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        -- Iniciar transacci√≥n
+        BEGIN TRANSACTION;
+
+        -- Insertar la venta en la tabla Venta
+        INSERT INTO Venta (Fecha, Importe, Iva, Total, Metodo_Pago, ID_Cliente)
+        VALUES (@Fecha, @Importe, @Iva, @Total, @Metodo_Pago, @ID_Cliente);
+
+        -- Obtener el ID de la venta reci√©n insertada
+        DECLARE @ID_Venta INT;
+        SET @ID_Venta = SCOPE_IDENTITY();
+
+        -- Insertar los detalles de la venta en la tabla DetalleVenta
+        INSERT INTO DetalleVenta (ID_Venta, ID_Producto, Cantidad, Precio_Unitario, Subtotal)
+        VALUES 
+            (@ID_Venta, @ID_Producto, @Cantidad, @Precio_Unitario, @Cantidad * @Precio_Unitario);
+
+        -- Verificar si hay suficiente inventario antes de actualizar
+        IF EXISTS (
+            SELECT 1
+            FROM Saldos
+            WHERE ID_Producto = @ID_Producto
+              AND (Cantidad_Entrante - Cantidad_Salida) >= @Cantidad
+        )
+        BEGIN
+            -- Actualizar el inventario (tabla Saldos)
+            UPDATE Saldos
+            SET Cantidad_Salida = Cantidad_Salida + @Cantidad
+            WHERE ID_Producto = @ID_Producto;
+
+            -- Confirmar la transacci√≥n
+            COMMIT;
+
+            -- Devolver el ID de la venta registrada
+            SET @Resultado = @ID_Venta;
+        END
+        ELSE
+        BEGIN
+            -- Si no hay suficiente inventario, hacer rollback y devolver un error
+            ROLLBACK;
+            SET @Resultado = -1; -- Indica error por falta de inventario
+        END
+    END TRY
+    BEGIN CATCH
+        -- Si ocurre un error, revertir la transacci√≥n
+        ROLLBACK;
+
+        -- Indicar error devolviendo 0
+        SET @Resultado = 0;
+    END CATCH
+END
+GO
+
