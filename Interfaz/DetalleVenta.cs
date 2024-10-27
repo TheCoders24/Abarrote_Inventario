@@ -185,7 +185,168 @@ namespace Interfaz
         }
 
 
-        public async Task CargarDetallesVenta(string nombreProducto, string nombreCliente, int cantidad, decimal preciounitario)
+        //public async Task CargarDetallesVenta(string nombreProducto, string nombreCliente, int cantidad, decimal preciounitario)
+        //{
+        //    // Validaciones de los datos
+        //    if (string.IsNullOrWhiteSpace(nombreProducto))
+        //    {
+        //        MessageBox.Show("El nombre del producto no puede estar vacío.");
+        //        return;
+        //    }
+
+        //    if (string.IsNullOrWhiteSpace(nombreCliente))
+        //    {
+        //        MessageBox.Show("El nombre del cliente no puede estar vacío.");
+        //        return;
+        //    }
+
+        //    if (cantidad <= 0)
+        //    {
+        //        MessageBox.Show("La cantidad debe ser mayor que cero.");
+        //        return;
+        //    }
+
+        //    if (preciounitario <= 0)
+        //    {
+        //        MessageBox.Show("El precio unitario debe ser mayor que cero.");
+        //        return;
+        //    }
+
+        //    // Cálculo del subtotal
+        //    decimal subtotal = cantidad * preciounitario;
+        //    txtsubtotal.Text = subtotal.ToString();
+        //    txtTotal.Text = subtotal.ToString();
+
+
+        //    // Consulta SQL para insertar en Venta
+        //    string queryInsertVenta = @"
+        //    INSERT INTO Venta (Fecha, Importe, Iva, Total, Método_Pago, ID_Cliente)
+        //    OUTPUT INSERTED.ID_Venta
+        //    VALUES (@Fecha, @Importe, @Iva, @Total, @MetodoPago, @ID_Cliente);";
+
+        //    // Consulta SQL para insertar en DetalleVenta
+        //    string queryInsertDetalle = @"
+        //    INSERT INTO DetalleVenta (ID_Producto, ID_Venta, Cantidad, Precio_Unitario, Subtotal)
+        //    VALUES (@ID_Producto, @ID_Venta, @Cantidad, @PrecioUnitario, @Subtotal);";
+
+        //    // Consulta SQL para obtener los IDs
+        //    string queryObtenerIDs = @"
+        //    SELECT ID_Cliente FROM Cliente WHERE Nombre = @NombreCliente;
+        //    SELECT ID_Producto FROM Producto WHERE Nombre = @NombreProducto;";
+
+        //    try
+        //    {
+        //        using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
+        //        {
+        //            if (connection == null)
+        //            {
+        //                MessageBox.Show("Error al establecer conexión con la base de datos.");
+        //                return;
+        //            }
+
+        //            using (SqlTransaction transaction = connection.BeginTransaction())
+        //            {
+        //                try
+        //                {
+        //                    // Obtener ID del cliente
+        //                    int? clienteId = await ObtenerIdClientePorNombre(nombreCliente);
+        //                    if (clienteId == null)
+        //                    {
+        //                        MessageBox.Show("El cliente no se encontró en la base de datos.");
+        //                        return;
+        //                    }
+
+        //                    // Obtener ID del producto
+        //                    int idProducto;
+        //                    using (SqlCommand commandObtenerIDs = new SqlCommand(queryObtenerIDs, connection, transaction))
+        //                    {
+        //                        commandObtenerIDs.Parameters.AddWithValue("@NombreCliente", nombreCliente);
+        //                        commandObtenerIDs.Parameters.AddWithValue("@NombreProducto", nombreProducto);
+
+        //                        using (SqlDataReader reader = await commandObtenerIDs.ExecuteReaderAsync())
+        //                        {
+        //                            if (reader.Read())
+        //                            {
+        //                                // Leer el ID del producto
+        //                                if (reader.NextResult() && reader.Read())
+        //                                {
+        //                                    idProducto = reader.GetInt32(0); // Obtener el ID del producto
+        //                                }
+        //                                else
+        //                                {
+        //                                    MessageBox.Show("No se encontró el producto.");
+        //                                    return;
+        //                                }
+        //                            }
+        //                            else
+        //                            {
+        //                                MessageBox.Show("No se encontraron resultados para el cliente o el producto.");
+        //                                return;
+        //                            }
+        //                        }
+        //                    }
+
+        //                    // Insertar en la tabla Venta
+        //                    int idVenta;
+        //                    decimal iva = 0.16m;
+        //                    using (SqlCommand commandInsertVenta = new SqlCommand(queryInsertVenta, connection, transaction))
+        //                    {
+        //                        // Parámetros para la tabla Venta
+        //                        commandInsertVenta.Parameters.AddWithValue("@Fecha", DateTime.Now);
+        //                        commandInsertVenta.Parameters.AddWithValue("@Importe", subtotal);
+        //                        commandInsertVenta.Parameters.AddWithValue("@Iva", iva * subtotal); // Asumiendo un IVA del 16%
+        //                        commandInsertVenta.Parameters.AddWithValue("@Total", 1.16m * subtotal);
+        //                        commandInsertVenta.Parameters.AddWithValue("@MetodoPago", "Efectivo"); // Puedes cambiar el método de pago según la selección
+        //                        commandInsertVenta.Parameters.AddWithValue("@ID_Cliente", clienteId.Value);
+
+        //                        // Obtener el ID de la venta recién insertada
+        //                        idVenta = (int)await commandInsertVenta.ExecuteScalarAsync();
+        //                    }
+
+        //                    // Insertar en la tabla DetalleVenta
+        //                    using (SqlCommand commandInsertDetalle = new SqlCommand(queryInsertDetalle, connection, transaction))
+        //                    {
+        //                        commandInsertDetalle.Parameters.AddWithValue("@ID_Venta", idVenta);
+        //                        commandInsertDetalle.Parameters.AddWithValue("@ID_Producto", idProducto);
+        //                        commandInsertDetalle.Parameters.AddWithValue("@Cantidad", cantidad);
+        //                        commandInsertDetalle.Parameters.AddWithValue("@PrecioUnitario", preciounitario);
+        //                        commandInsertDetalle.Parameters.AddWithValue("@Subtotal", subtotal);
+
+        //                        int filasAfectadas = await commandInsertDetalle.ExecuteNonQueryAsync();
+        //                        MessageBox.Show($"Filas afectadas por la inserción: {filasAfectadas}");
+
+        //                        if (filasAfectadas == 0)
+        //                        {
+        //                            MessageBox.Show("No se pudo insertar el detalle de la venta.");
+        //                            transaction.Rollback();
+        //                            return;
+        //                        }
+        //                    }
+
+        //                    // Si todo va bien, hacer commit
+        //                    transaction.Commit();
+        //                    MessageBox.Show("Venta y detalle insertados correctamente.");
+        //                }
+        //                catch (SqlException sqlEx)
+        //                {
+        //                    transaction.Rollback();
+        //                    MessageBox.Show("Error de base de datos: " + sqlEx.Message);
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    transaction.Rollback();
+        //                    MessageBox.Show("Ocurrió un error: " + ex.Message);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Error general: " + ex.Message);
+        //    }
+
+        //}
+        public async Task CargarDetallesVenta(string nombreProducto, string nombreCliente, int cantidad, decimal precioUnitario)
         {
             // Validaciones de los datos
             if (string.IsNullOrWhiteSpace(nombreProducto))
@@ -206,33 +367,17 @@ namespace Interfaz
                 return;
             }
 
-            if (preciounitario <= 0)
+            if (precioUnitario <= 0)
             {
                 MessageBox.Show("El precio unitario debe ser mayor que cero.");
                 return;
             }
 
             // Cálculo del subtotal
-            decimal subtotal = cantidad * preciounitario;
+            decimal subtotal = cantidad * precioUnitario;
+            string metodopago = comboBoxmetodopago.Text;
             txtsubtotal.Text = subtotal.ToString();
             txtTotal.Text = subtotal.ToString();
-            
-
-            // Consulta SQL para insertar en Venta
-            string queryInsertVenta = @"
-            INSERT INTO Venta (Fecha, Importe, Iva, Total, Método_Pago, ID_Cliente)
-            OUTPUT INSERTED.ID_Venta
-            VALUES (@Fecha, @Importe, @Iva, @Total, @MetodoPago, @ID_Cliente);";
-
-            // Consulta SQL para insertar en DetalleVenta
-            string queryInsertDetalle = @"
-            INSERT INTO DetalleVenta (ID_Producto, ID_Venta, Cantidad, Precio_Unitario, Subtotal)
-            VALUES (@ID_Producto, @ID_Venta, @Cantidad, @PrecioUnitario, @Subtotal);";
-
-            // Consulta SQL para obtener los IDs
-            string queryObtenerIDs = @"
-            SELECT ID_Cliente FROM Cliente WHERE Nombre = @NombreCliente;
-            SELECT ID_Producto FROM Producto WHERE Nombre = @NombreProducto;";
 
             try
             {
@@ -244,107 +389,56 @@ namespace Interfaz
                         return;
                     }
 
-                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    using (SqlCommand command = new SqlCommand("usp_RegistrarVenta", connection))
                     {
-                        try
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros para el procedimiento almacenado
+                        command.Parameters.AddWithValue("@Fecha", DateTime.Now);
+                        command.Parameters.AddWithValue("@Importe", subtotal);
+                        command.Parameters.AddWithValue("@Iva", 0.16m * subtotal); // IVA del 16%
+                        command.Parameters.AddWithValue("@Total", 1.16m * subtotal);
+                        command.Parameters.AddWithValue("@Metodo_Pago", metodopago); // Cambia según el método de pago
+                        command.Parameters.Add("@ID_Cliente", SqlDbType.Int).Value = await ObtenerIdClientePorNombre(nombreCliente) ?? (object)DBNull.Value;
+                        command.Parameters.Add("@ID_Producto", SqlDbType.Int).Value = await ObtenerIdProductoPorNombre(nombreProducto) ?? (object)DBNull.Value;
+                        command.Parameters.AddWithValue("@Cantidad", cantidad);
+                        command.Parameters.AddWithValue("@Precio_Unitario", precioUnitario);
+
+                        // Parámetro de salida
+                        SqlParameter resultadoParam = new SqlParameter("@Resultado", SqlDbType.Int)
                         {
-                            // Obtener ID del cliente
-                            int? clienteId = await ObtenerIdClientePorNombre(nombreCliente);
-                            if (clienteId == null)
-                            {
-                                MessageBox.Show("El cliente no se encontró en la base de datos.");
-                                return;
-                            }
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(resultadoParam);
 
-                            // Obtener ID del producto
-                            int idProducto;
-                            using (SqlCommand commandObtenerIDs = new SqlCommand(queryObtenerIDs, connection, transaction))
-                            {
-                                commandObtenerIDs.Parameters.AddWithValue("@NombreCliente", nombreCliente);
-                                commandObtenerIDs.Parameters.AddWithValue("@NombreProducto", nombreProducto);
+                        // Ejecutar el procedimiento
+                        await command.ExecuteNonQueryAsync();
 
-                                using (SqlDataReader reader = await commandObtenerIDs.ExecuteReaderAsync())
-                                {
-                                    if (reader.Read())
-                                    {
-                                        // Leer el ID del producto
-                                        if (reader.NextResult() && reader.Read())
-                                        {
-                                            idProducto = reader.GetInt32(0); // Obtener el ID del producto
-                                        }
-                                        else
-                                        {
-                                            MessageBox.Show("No se encontró el producto.");
-                                            return;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show("No se encontraron resultados para el cliente o el producto.");
-                                        return;
-                                    }
-                                }
-                            }
+                        int resultado = (int)command.Parameters["@Resultado"].Value;
 
-                            // Insertar en la tabla Venta
-                            int idVenta;
-                            decimal iva = 0.16m;
-                            using (SqlCommand commandInsertVenta = new SqlCommand(queryInsertVenta, connection, transaction))
-                            {
-                                // Parámetros para la tabla Venta
-                                commandInsertVenta.Parameters.AddWithValue("@Fecha", DateTime.Now);
-                                commandInsertVenta.Parameters.AddWithValue("@Importe", subtotal);
-                                commandInsertVenta.Parameters.AddWithValue("@Iva", iva * subtotal); // Asumiendo un IVA del 16%
-                                commandInsertVenta.Parameters.AddWithValue("@Total", 1.16m * subtotal);
-                                commandInsertVenta.Parameters.AddWithValue("@MetodoPago", "Efectivo"); // Puedes cambiar el método de pago según la selección
-                                commandInsertVenta.Parameters.AddWithValue("@ID_Cliente", clienteId.Value);
-
-                                // Obtener el ID de la venta recién insertada
-                                idVenta = (int)await commandInsertVenta.ExecuteScalarAsync();
-                            }
-
-                            // Insertar en la tabla DetalleVenta
-                            using (SqlCommand commandInsertDetalle = new SqlCommand(queryInsertDetalle, connection, transaction))
-                            {
-                                commandInsertDetalle.Parameters.AddWithValue("@ID_Venta", idVenta);
-                                commandInsertDetalle.Parameters.AddWithValue("@ID_Producto", idProducto);
-                                commandInsertDetalle.Parameters.AddWithValue("@Cantidad", cantidad);
-                                commandInsertDetalle.Parameters.AddWithValue("@PrecioUnitario", preciounitario);
-                                commandInsertDetalle.Parameters.AddWithValue("@Subtotal", subtotal);
-
-                                int filasAfectadas = await commandInsertDetalle.ExecuteNonQueryAsync();
-                                MessageBox.Show($"Filas afectadas por la inserción: {filasAfectadas}");
-
-                                if (filasAfectadas == 0)
-                                {
-                                    MessageBox.Show("No se pudo insertar el detalle de la venta.");
-                                    transaction.Rollback();
-                                    return;
-                                }
-                            }
-
-                            // Si todo va bien, hacer commit
-                            transaction.Commit();
-                            MessageBox.Show("Venta y detalle insertados correctamente.");
+                        if (resultado == -1)
+                        {
+                            MessageBox.Show("No hay suficiente inventario para completar la venta.");
                         }
-                        catch (SqlException sqlEx)
+                        else if (resultado == 0)
                         {
-                            transaction.Rollback();
-                            MessageBox.Show("Error de base de datos: " + sqlEx.Message);
+                            MessageBox.Show("Ocurrió un error al registrar la venta.");
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            transaction.Rollback();
-                            MessageBox.Show("Ocurrió un error: " + ex.Message);
+                            MessageBox.Show($"Venta registrada exitosamente con ID: {resultado}");
                         }
                     }
                 }
             }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Error de base de datos: " + sqlEx.Message);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Error general: " + ex.Message);
+                MessageBox.Show("Ocurrió un error: " + ex.Message);
             }
-
         }
 
         private void DetalleVenta_Load(object sender, EventArgs e)
