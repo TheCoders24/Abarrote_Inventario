@@ -73,7 +73,7 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 287);
+            this.dataGridView1.Location = new System.Drawing.Point(14, 215);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(790, 357);
             this.dataGridView1.TabIndex = 2;
@@ -131,7 +131,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(806, 513);
+            this.label5.Location = new System.Drawing.Point(807, 464);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(53, 13);
             this.label5.TabIndex = 9;
@@ -140,7 +140,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(809, 543);
+            this.label6.Location = new System.Drawing.Point(810, 494);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(27, 13);
             this.label6.TabIndex = 10;
@@ -149,7 +149,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(809, 574);
+            this.label7.Location = new System.Drawing.Point(810, 525);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(34, 13);
             this.label7.TabIndex = 11;
@@ -157,21 +157,21 @@
             // 
             // txtsubtotal
             // 
-            this.txtsubtotal.Location = new System.Drawing.Point(861, 510);
+            this.txtsubtotal.Location = new System.Drawing.Point(862, 461);
             this.txtsubtotal.Name = "txtsubtotal";
             this.txtsubtotal.Size = new System.Drawing.Size(100, 20);
             this.txtsubtotal.TabIndex = 12;
             // 
             // txtiva
             // 
-            this.txtiva.Location = new System.Drawing.Point(861, 543);
+            this.txtiva.Location = new System.Drawing.Point(862, 494);
             this.txtiva.Name = "txtiva";
             this.txtiva.Size = new System.Drawing.Size(100, 20);
             this.txtiva.TabIndex = 13;
             // 
             // txtTotal
             // 
-            this.txtTotal.Location = new System.Drawing.Point(861, 574);
+            this.txtTotal.Location = new System.Drawing.Point(862, 525);
             this.txtTotal.Name = "txtTotal";
             this.txtTotal.Size = new System.Drawing.Size(100, 20);
             this.txtTotal.TabIndex = 14;
@@ -179,7 +179,7 @@
             // btnGuardar
             // 
             this.btnGuardar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGuardar.Location = new System.Drawing.Point(871, 601);
+            this.btnGuardar.Location = new System.Drawing.Point(872, 552);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(75, 43);
             this.btnGuardar.TabIndex = 15;
@@ -208,7 +208,7 @@
             this.groupBox1.Controls.Add(this.txtCantidad);
             this.groupBox1.Location = new System.Drawing.Point(66, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(736, 235);
+            this.groupBox1.Size = new System.Drawing.Size(736, 182);
             this.groupBox1.TabIndex = 17;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Venta";
@@ -236,7 +236,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1261, 655);
+            this.ClientSize = new System.Drawing.Size(998, 609);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.txtFecha);
             this.Controls.Add(this.btnGuardar);
