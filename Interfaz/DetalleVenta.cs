@@ -37,7 +37,7 @@ namespace Interfaz
                 connection = await Utilidades.ObtenerConexionAsync(); // Inicializar la conexión
                                                     // connection.Open(); // No es necesario abrirla explícitamente, se maneja en Utilidades.Conexion()
 
-                string query = "SELECT ID_Producto, Nombre, Precio, Descripción FROM Producto";
+                string query = "SELECT ID_Producto, Nombre, Precio, Descripcion FROM Producto";
                 SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
                 DataTable productosTable = new DataTable();
                 adapter.Fill(productosTable);
