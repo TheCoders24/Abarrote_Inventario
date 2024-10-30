@@ -48,6 +48,8 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
             this.comboBoxmetodopago = new System.Windows.Forms.ComboBox();
+            this.txtimporte = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -196,6 +198,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.txtimporte);
+            this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.comboBoxmetodopago);
             this.groupBox1.Controls.Add(this.txtPrecio);
@@ -231,6 +235,22 @@
             this.comboBoxmetodopago.Name = "comboBoxmetodopago";
             this.comboBoxmetodopago.Size = new System.Drawing.Size(214, 21);
             this.comboBoxmetodopago.TabIndex = 10;
+            // 
+            // txtimporte
+            // 
+            this.txtimporte.Location = new System.Drawing.Point(349, 101);
+            this.txtimporte.Name = "txtimporte";
+            this.txtimporte.Size = new System.Drawing.Size(100, 20);
+            this.txtimporte.TabIndex = 12;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(303, 104);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(45, 13);
+            this.label9.TabIndex = 11;
+            this.label9.Text = "Importe:";
             // 
             // DetalleVenta
             // 
@@ -280,5 +300,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox comboBoxmetodopago;
+        private System.Windows.Forms.TextBox txtimporte;
+        private System.Windows.Forms.Label label9;
     }
 }

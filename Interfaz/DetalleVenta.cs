@@ -438,48 +438,197 @@ namespace Interfaz
             }
         }
 
-        private void DetalleVenta_Load(object sender, EventArgs e)
+        private async void DetalleVenta_Load(object sender, EventArgs e)
         {
            
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private async void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (comboboxProducto.SelectedItem == null || comboBoxCliente.SelectedItem == null)
+            //if (comboboxProducto.SelectedItem == null || comboBoxCliente.SelectedItem == null)
+            //{
+            //    MessageBox.Show("Seleccione un Producto y un Cliente");
+            //    return;
+            //}
+            ////Verificamos que la cantidad sea un numero valido
+            //if (!int.TryParse(txtCantidad.Text, out int cantidad) || cantidad <= 0)
+            //{
+            //    MessageBox.Show("Ingresa una Cantidad Valida");
+            //    return;
+            //}
+
+            //if (!decimal.TryParse(txtPrecio.Text, out decimal precioUnitario) || precioUnitario <= 0 )
+            //{
+            //    MessageBox.Show("Ingrese un Precio Valido");
+            //    return;
+            //}
+
+            //decimal importe = cantidad * precioUnitario;
+
+            //     dataGridView1.Rows.Add(
+            //            comboboxProducto.Text, // Producto
+            //            cantidad,              // Cantidad
+            //            precioUnitario,       // Importe
+            //            importe                // Total
+            //    );
+            //string nombreProducto = comboboxProducto.Text;
+            //string nombreCliente = comboBoxCliente.Text;
+
+            //CargarDetallesVenta(nombreProducto,nombreCliente,cantidad,precioUnitario);
+
+            // Asumiendo que tienes todos los valores capturados desde el formulario.
+            int ID_Venta = 0; // Generado automáticamente en la base de datos, o puedes capturarlo si ya lo tienes.
+            DateTime Fecha = DateTime.Now; // O puedes tomarlo desde un control de fecha.
+            decimal Importe = Convert.ToDecimal(txtimporte.Text);
+            decimal IVA = 10.5m; 
+            // Intentar convertir el texto a decimal
+            // Obtener el texto del TextBox
+
+            //string IVA = txtiva.Text;
+            decimal Total = Importe + IVA;
+            string Metodo_Pago = comboBoxmetodopago.SelectedItem.ToString();
+            string ID_Cliente = comboBoxCliente.Text;
+
+            // Lista de detalles de la venta (ID_Producto, Cantidad, PrecioUnitario)
+            List<Tuple<int, int, decimal>> detallesVenta = new List<Tuple<int, int, decimal>>();
+
+            // Supongamos que tienes un DataGridView con las columnas ID_Producto, Cantidad, PrecioUnitario para los detalles
+            foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                MessageBox.Show("Seleccione un Producto y un Cliente");
-                return;
-            }
-            //Verificamos que la cantidad sea un numero valido
-            if (!int.TryParse(txtCantidad.Text, out int cantidad) || cantidad <= 0)
-            {
-                MessageBox.Show("Ingresa una Cantidad Valida");
-                return;
+                if (row.Cells["ID_Producto"].Value != null && row.Cells["Cantidad"].Value != null && row.Cells["PrecioUnitario"].Value != null)
+                {
+                    int ID_Producto = Convert.ToInt32(row.Cells["ID_Producto"].Value);
+                    int cantidad = Convert.ToInt32(row.Cells["Cantidad"].Value);
+                    decimal precioUnitario = Convert.ToDecimal(row.Cells["PrecioUnitario"].Value);
+                    detallesVenta.Add(new Tuple<int, int, decimal>(ID_Producto, cantidad, precioUnitario));
+                }
             }
 
-            if (!decimal.TryParse(txtPrecio.Text, out decimal precioUnitario) || precioUnitario <= 0 )
+            // Llamada a RegistrarVenta
+            bool resultado = await RegistrarVenta(ID_Venta, Fecha, Importe, IVA, Total, Metodo_Pago, ID_Cliente, detallesVenta);
+
+            // Verificar si la venta fue registrada correctamente
+            if (resultado)
             {
-                MessageBox.Show("Ingrese un Precio Valido");
-                return;
+                MessageBox.Show("Venta registrada exitosamente.");
             }
-
-            decimal importe = cantidad * precioUnitario;
-
-                 dataGridView1.Rows.Add(
-                        comboboxProducto.Text, // Producto
-                        cantidad,              // Cantidad
-                        precioUnitario,       // Importe
-                        importe                // Total
-                );
-            string nombreProducto = comboboxProducto.Text;
-            string nombreCliente = comboBoxCliente.Text;
-           
-            CargarDetallesVenta(nombreProducto,nombreCliente,cantidad,precioUnitario);
+            else
+            {
+                MessageBox.Show("Error al registrar la venta. Verifica los datos y el stock.");
+            }
         }
+
+
+        public async Task<bool> RegistrarVenta(int ID_Venta, DateTime Fecha, decimal Importe, decimal IVA, decimal Total, string Metodo_Pago, String ID_Cliente, List<Tuple<int, int, decimal>> detallesVenta)
+        {
+            SqlTransaction transaction = null;
+            SqlConnection conexion = await Utilidades.ObtenerConexionAsync();
+
+            try
+            {
+                // Obtener la conexión de forma asíncrona
+                SqlConnection connection = await Utilidades.ObtenerConexionAsync();
+
+                // Abrir la conexión
+                await connection.OpenAsync();
+
+                // Iniciar la transacción
+                transaction = conexion.BeginTransaction();
+
+                // Verificar la existencia del producto y su stock para cada detalle
+                foreach (var detalle in detallesVenta)
+                {
+                    int ID_Producto = detalle.Item1;
+                    int cantidadVendida = detalle.Item2;
+
+                    string queryStock = "SELECT Cantidad_Disponible FROM Saldos WHERE ID_Producto = @ID_Producto";
+                    using (SqlCommand cmdStock = new SqlCommand(queryStock, conexion, transaction))
+                    {
+                        cmdStock.Parameters.AddWithValue("@ID_Producto", ID_Producto);
+                        object result = await cmdStock.ExecuteScalarAsync();
+
+                        if (result == null)
+                        {
+                            Console.WriteLine($"No se encontró información de stock para el producto con ID {ID_Producto}");
+                            transaction.Rollback();
+                            return false;
+                        }
+
+                        decimal stockActual = Convert.ToDecimal(result);
+                        if (stockActual < cantidadVendida)
+                        {
+                            Console.WriteLine($"Stock insuficiente para el producto con ID {ID_Producto}. Stock actual: {stockActual}, Cantidad solicitada: {cantidadVendida}");
+                            transaction.Rollback();
+                            return false;
+                        }
+                    }
+                }
+
+                // Insertar la venta y obtener el ID generado
+                string queryVenta = "INSERT INTO Venta (Fecha, Importe, IVA, Total, Metodo_Pago, ID_Cliente) " +
+                                    "VALUES (@Fecha, @Importe, @IVA, @Total, @Metodo_Pago, @ID_Cliente); " +
+                                    "SELECT SCOPE_IDENTITY();";
+
+                using (SqlCommand cmdVenta = new SqlCommand(queryVenta, conexion, transaction))
+                {
+                    cmdVenta.Parameters.AddWithValue("@Fecha", Fecha);
+                    cmdVenta.Parameters.AddWithValue("@Importe", Importe);
+                    cmdVenta.Parameters.AddWithValue("@IVA", IVA);
+                    cmdVenta.Parameters.AddWithValue("@Total", Total);
+                    cmdVenta.Parameters.AddWithValue("@Metodo_Pago", Metodo_Pago);
+                    cmdVenta.Parameters.AddWithValue("@ID_Cliente", ID_Cliente);
+
+                    object result = await cmdVenta.ExecuteScalarAsync();
+                    int idVentaGenerado = Convert.ToInt32(result);
+
+                    // Insertar los detalles de la venta y actualizar el stock
+                    foreach (var detalle in detallesVenta)
+                    {
+                        int idProducto = detalle.Item1;
+                        int cantidadVendida = detalle.Item2;
+                        decimal precioUnitario = detalle.Item3;
+                        decimal subtotal = cantidadVendida * precioUnitario;
+
+                        string queryDetalleVenta = "INSERT INTO Detalle_Venta (ID_Venta, ID_Producto, Cantidad, Precio_Unitario, Subtotal) " +
+                                                   "VALUES (@ID_Venta, @ID_Producto, @Cantidad, @Precio_Unitario, @Subtotal)";
+                        using (SqlCommand cmdDetalleVenta = new SqlCommand(queryDetalleVenta, conexion, transaction))
+                        {
+                            cmdDetalleVenta.Parameters.AddWithValue("@ID_Venta", idVentaGenerado);
+                            cmdDetalleVenta.Parameters.AddWithValue("@ID_Producto", idProducto);
+                            cmdDetalleVenta.Parameters.AddWithValue("@Cantidad", cantidadVendida);
+                            cmdDetalleVenta.Parameters.AddWithValue("@Precio_Unitario", precioUnitario);
+                            cmdDetalleVenta.Parameters.AddWithValue("@Subtotal", subtotal);
+                            await cmdDetalleVenta.ExecuteNonQueryAsync();
+                        }
+
+                        string queryUpdateStock = "UPDATE Saldos SET Cantidad_Salida = Cantidad_Salida + @Cantidad WHERE ID_Producto = @ID_Producto";
+                        using (SqlCommand cmdUpdateStock = new SqlCommand(queryUpdateStock, conexion, transaction))
+                        {
+                            cmdUpdateStock.Parameters.AddWithValue("@Cantidad", cantidadVendida);
+                            cmdUpdateStock.Parameters.AddWithValue("@ID_Producto", idProducto);
+                            await cmdUpdateStock.ExecuteNonQueryAsync();
+                        }
+                    }
+                }
+
+                transaction.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                if (transaction != null)
+                {
+                    transaction.Rollback();
+                }
+                Console.WriteLine($"Error al registrar la venta: {ex.Message}");
+                return false;
+            }
+        }
+
 
         private void ConfigurarDataGridView()
         {
-            dataGridView1.Columns.Add("Producto", "Producto");
+            dataGridView1.Columns.Add("ID_Producto", "ID_Producto");
             dataGridView1.Columns.Add("Cantidad", "Cantidad");
             dataGridView1.Columns.Add("PrecioUnitario", "Precio Unitario");
             dataGridView1.Columns.Add("Total", "Total");
