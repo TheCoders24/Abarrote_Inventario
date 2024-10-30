@@ -37,7 +37,7 @@ namespace CapaDatos
             {
                 try
                 {
-                    string consultaSql = "INSERT INTO Producto (Nombre, Precio, Descripción, ID_Proveedor) VALUES (@nombre, @precio, @descripcion, @idProveedor)";
+                    string consultaSql = "INSERT INTO Producto (Nombre, Precio, Descripcion) VALUES (@nombre, @precio, @descripcion)";
                     using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
                     {
                        

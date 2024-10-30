@@ -403,7 +403,6 @@ namespace Interfaz
                         command.Parameters.Add("@ID_Producto", SqlDbType.Int).Value = await ObtenerIdProductoPorNombre(nombreProducto) ?? (object)DBNull.Value;
                         command.Parameters.AddWithValue("@Cantidad", cantidad);
                         command.Parameters.AddWithValue("@Precio_Unitario", precioUnitario);
-
                         // Parámetro de salida
                         SqlParameter resultadoParam = new SqlParameter("@Resultado", SqlDbType.Int)
                         {
@@ -413,9 +412,7 @@ namespace Interfaz
 
                         // Ejecutar el procedimiento
                         await command.ExecuteNonQueryAsync();
-
                         int resultado = (int)command.Parameters["@Resultado"].Value;
-
                         if (resultado == -1)
                         {
                             MessageBox.Show("No hay suficiente inventario para completar la venta.");

@@ -55,7 +55,7 @@ namespace CapaDatos
                         throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
                     }
 
-                    string consultaSql = "INSERT INTO Cliente (Nombre, Telefono, Dirección) VALUES (@nombre, @telefono, @direccion)";
+                    string consultaSql = "INSERT INTO Cliente (Nombre, Telefono, Direccion) VALUES (@nombre, @telefono, @direccion)";
 
                     using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
                     {
@@ -88,7 +88,7 @@ namespace CapaDatos
                         throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
                     }
 
-                    string consultaSql = "UPDATE Cliente SET Nombre = @nombre, Telefono = @telefono, Dirección = @direccion WHERE ID_Cliente = @idcliente";
+                    string consultaSql = "UPDATE Cliente SET Nombre = @nombre, Telefono = @telefono, Direccion = @direccion WHERE ID_Cliente = @idcliente";
 
                     using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
                     {
@@ -161,7 +161,7 @@ namespace CapaDatos
                         throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
                     }
 
-                    string consultaSql = "SELECT ID_Cliente, Nombre, Telefono, Dirección FROM Cliente";
+                    string consultaSql = "SELECT ID_Cliente, Nombre, Telefono, Direccion FROM Cliente";
 
                     using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
                     {
@@ -196,7 +196,7 @@ namespace CapaDatos
                         throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
                     }
 
-                    string consultaSql = "SELECT ID_Cliente, Nombre, Telefono, Dirección FROM Cliente WHERE Nombre LIKE @textobuscar + '%'";
+                    string consultaSql = "SELECT ID_Cliente, Nombre, Telefono, Direccion FROM Cliente WHERE Nombre LIKE @textobuscar + '%'";
 
                     using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
                     {

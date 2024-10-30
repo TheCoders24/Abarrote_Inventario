@@ -40,7 +40,7 @@ namespace CapaDatos
                         throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
                     }
 
-                    string consultaSql = "INSERT INTO Proveedor (Nombre, Telefono, Dirección) VALUES (@nombre, @telefono, @direccion)";
+                    string consultaSql = "INSERT INTO Proveedor (Nombre, Telefono, Direccion) VALUES (@nombre, @telefono, @direccion)";
                     using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
                     {
                         comandoSql.Parameters.Add("@nombre", SqlDbType.VarChar).Value = proveedor.Nombre;
@@ -140,7 +140,7 @@ namespace CapaDatos
                         throw new InvalidOperationException("No se pudo establecer la conexión a la base de datos.");
                     }
 
-                    string consultaSql = "SELECT Nombre, Telefono, Dirección FROM Proveedor";
+                    string consultaSql = "SELECT Nombre, Telefono, Direccion FROM Proveedor";
                     using (var comandoSql = new SqlCommand(consultaSql, conexionSql))
                     {
                         using (var sqlDat = new SqlDataAdapter(comandoSql))
