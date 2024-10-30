@@ -488,7 +488,7 @@ namespace Interfaz
             //string IVA = txtiva.Text;
             decimal Total = Importe + IVA;
             string Metodo_Pago = comboBoxmetodopago.SelectedItem.ToString();
-            string ID_Cliente = comboBoxCliente.Text;
+            int? ID_Cliente = await ObtenerIdClientePorNombre(txtimporte.Text);
 
             // Lista de detalles de la venta (ID_Producto, Cantidad, PrecioUnitario)
             List<Tuple<int, int, decimal>> detallesVenta = new List<Tuple<int, int, decimal>>();
@@ -506,7 +506,7 @@ namespace Interfaz
             }
 
             // Llamada a RegistrarVenta
-            bool resultado = await RegistrarVenta(ID_Venta, Fecha, Importe, IVA, Total, Metodo_Pago, ID_Cliente, detallesVenta);
+            bool resultado = await RegistrarVenta(ID_Venta, Fecha, Importe, IVA, Total, Metodo_Pago, Convert.ToInt32(ID_Cliente), detallesVenta);
 
             // Verificar si la venta fue registrada correctamente
             if (resultado)
@@ -519,83 +519,101 @@ namespace Interfaz
             }
         }
 
-
-        public async Task<bool> RegistrarVenta(int ID_Venta, DateTime Fecha, decimal Importe, decimal IVA, decimal Total, string Metodo_Pago, String ID_Cliente, List<Tuple<int, int, decimal>> detallesVenta)
+        public async Task<bool> RegistrarVenta(int ID_Venta, DateTime Fecha, decimal Importe, decimal IVA, decimal Total, string Metodo_Pago, int ID_Cliente, List<Tuple<int, int, decimal>> detallesVenta)
         {
             SqlTransaction transaction = null;
-            SqlConnection conexion = await Utilidades.ObtenerConexionAsync();
 
-            try
+            using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
             {
-                // Obtener la conexión de forma asíncrona
-                SqlConnection connection = await Utilidades.ObtenerConexionAsync();
-
-                // Abrir la conexión
-                await connection.OpenAsync();
-
-                // Iniciar la transacción
-                transaction = conexion.BeginTransaction();
-
-                // Verificar la existencia del producto y su stock para cada detalle
-                foreach (var detalle in detallesVenta)
+                try
                 {
-                    int ID_Producto = detalle.Item1;
-                    int cantidadVendida = detalle.Item2;
-
-                    string queryStock = "SELECT Cantidad_Disponible FROM Saldos WHERE ID_Producto = @ID_Producto";
-                    using (SqlCommand cmdStock = new SqlCommand(queryStock, conexion, transaction))
+                    // Verifica si la conexión está cerrada antes de abrirla
+                    if (connection.State == ConnectionState.Closed)
                     {
-                        cmdStock.Parameters.AddWithValue("@ID_Producto", ID_Producto);
-                        object result = await cmdStock.ExecuteScalarAsync();
-
-                        if (result == null)
-                        {
-                            Console.WriteLine($"No se encontró información de stock para el producto con ID {ID_Producto}");
-                            transaction.Rollback();
-                            return false;
-                        }
-
-                        decimal stockActual = Convert.ToDecimal(result);
-                        if (stockActual < cantidadVendida)
-                        {
-                            Console.WriteLine($"Stock insuficiente para el producto con ID {ID_Producto}. Stock actual: {stockActual}, Cantidad solicitada: {cantidadVendida}");
-                            transaction.Rollback();
-                            return false;
-                        }
+                        await connection.OpenAsync();
                     }
-                }
 
-                // Insertar la venta y obtener el ID generado
-                string queryVenta = "INSERT INTO Venta (Fecha, Importe, IVA, Total, Metodo_Pago, ID_Cliente) " +
-                                    "VALUES (@Fecha, @Importe, @IVA, @Total, @Metodo_Pago, @ID_Cliente); " +
-                                    "SELECT SCOPE_IDENTITY();";
+                    // Inicia la transacción
+                    transaction = connection.BeginTransaction();
 
-                using (SqlCommand cmdVenta = new SqlCommand(queryVenta, conexion, transaction))
-                {
-                    cmdVenta.Parameters.AddWithValue("@Fecha", Fecha);
-                    cmdVenta.Parameters.AddWithValue("@Importe", Importe);
-                    cmdVenta.Parameters.AddWithValue("@IVA", IVA);
-                    cmdVenta.Parameters.AddWithValue("@Total", Total);
-                    cmdVenta.Parameters.AddWithValue("@Metodo_Pago", Metodo_Pago);
-                    cmdVenta.Parameters.AddWithValue("@ID_Cliente", ID_Cliente);
-
-                    object result = await cmdVenta.ExecuteScalarAsync();
-                    int idVentaGenerado = Convert.ToInt32(result);
-
-                    // Insertar los detalles de la venta y actualizar el stock
+                    // Verifica el stock de cada producto
                     foreach (var detalle in detallesVenta)
                     {
-                        int idProducto = detalle.Item1;
+                        int? ID_Producto = await ObtenerIDProductoPorNombreAsync(comboboxProducto.Text);
+                        int cantidadVendida = detalle.Item2;
+
+                        string queryStock = "SELECT Cantidad_Disponible FROM Saldos WHERE ID_Producto = @ID_Producto";
+                        using (SqlCommand cmdStock = new SqlCommand(queryStock, connection, transaction))
+                        {
+                            cmdStock.Parameters.AddWithValue("@ID_Producto", ID_Producto);
+                            object result = await cmdStock.ExecuteScalarAsync();
+
+                            if (result == null)
+                            {
+                                Console.WriteLine($"No se encontró información de stock para el producto con ID {ID_Producto}");
+                                transaction.Rollback();
+                                return false;
+                            }
+
+                            decimal stockActual = Convert.ToDecimal(result);
+                            if (stockActual < cantidadVendida)
+                            {
+                                Console.WriteLine($"Stock insuficiente para el producto con ID {ID_Producto}. Stock actual: {stockActual}, Cantidad solicitada: {cantidadVendida}");
+                                transaction.Rollback();
+                                return false;
+                            }
+                        }
+                    }
+
+                    // Verifica si el cliente existe en la tabla Cliente
+                    string queryCliente = "SELECT COUNT(1) FROM Cliente WHERE ID_Cliente = @ID_Cliente";
+                    using (SqlCommand cmdCliente = new SqlCommand(queryCliente, connection, transaction))
+                    {
+                        cmdCliente.Parameters.AddWithValue("@ID_Cliente", ID_Cliente); // Asegúrate de que este es el ID correcto
+                        int existeCliente = (int)await cmdCliente.ExecuteScalarAsync();
+
+                        if (existeCliente == 0)
+                        {
+                            Console.WriteLine($"El ID_Cliente {ID_Cliente} no existe en la base de datos.");
+                            transaction.Rollback();
+                            return false; // Sal de la función si el cliente no existe
+                        }
+                    }
+
+                    // Insertar la venta y obtener el ID generado
+                    string queryVenta = "INSERT INTO Venta (Fecha, Importe, IVA, Total, Metodo_Pago, ID_Cliente) " +
+                                        "VALUES (@Fecha, @Importe, @IVA, @Total, @Metodo_Pago, @ID_Cliente); " +
+                                        "SELECT SCOPE_IDENTITY();";
+
+                    int idVentaGenerado;
+                    using (SqlCommand cmdVenta = new SqlCommand(queryVenta, connection, transaction))
+                    {
+                        cmdVenta.Parameters.AddWithValue("@Fecha", Fecha);
+                        cmdVenta.Parameters.AddWithValue("@Importe", Importe);
+                        cmdVenta.Parameters.AddWithValue("@IVA", IVA);
+                        cmdVenta.Parameters.AddWithValue("@Total", Total);
+                        cmdVenta.Parameters.AddWithValue("@Metodo_Pago", Metodo_Pago);
+                        cmdVenta.Parameters.AddWithValue("@ID_Cliente", ID_Cliente);
+
+                        object result = await cmdVenta.ExecuteScalarAsync();
+                        
+                        idVentaGenerado = Convert.ToInt32(result);
+                    }
+
+                    // Insertar detalles de la venta y actualizar el stock
+                    foreach (var detalle in detallesVenta)
+                    {
+                        int? ID_Producto = await ObtenerIDProductoPorNombreAsync(comboboxProducto.Text);
                         int cantidadVendida = detalle.Item2;
                         decimal precioUnitario = detalle.Item3;
                         decimal subtotal = cantidadVendida * precioUnitario;
 
                         string queryDetalleVenta = "INSERT INTO Detalle_Venta (ID_Venta, ID_Producto, Cantidad, Precio_Unitario, Subtotal) " +
                                                    "VALUES (@ID_Venta, @ID_Producto, @Cantidad, @Precio_Unitario, @Subtotal)";
-                        using (SqlCommand cmdDetalleVenta = new SqlCommand(queryDetalleVenta, conexion, transaction))
+                        using (SqlCommand cmdDetalleVenta = new SqlCommand(queryDetalleVenta, connection, transaction))
                         {
                             cmdDetalleVenta.Parameters.AddWithValue("@ID_Venta", idVentaGenerado);
-                            cmdDetalleVenta.Parameters.AddWithValue("@ID_Producto", idProducto);
+                            cmdDetalleVenta.Parameters.AddWithValue("@ID_Producto", ID_Producto);
                             cmdDetalleVenta.Parameters.AddWithValue("@Cantidad", cantidadVendida);
                             cmdDetalleVenta.Parameters.AddWithValue("@Precio_Unitario", precioUnitario);
                             cmdDetalleVenta.Parameters.AddWithValue("@Subtotal", subtotal);
@@ -603,28 +621,185 @@ namespace Interfaz
                         }
 
                         string queryUpdateStock = "UPDATE Saldos SET Cantidad_Salida = Cantidad_Salida + @Cantidad WHERE ID_Producto = @ID_Producto";
-                        using (SqlCommand cmdUpdateStock = new SqlCommand(queryUpdateStock, conexion, transaction))
+                        using (SqlCommand cmdUpdateStock = new SqlCommand(queryUpdateStock, connection, transaction))
                         {
                             cmdUpdateStock.Parameters.AddWithValue("@Cantidad", cantidadVendida);
-                            cmdUpdateStock.Parameters.AddWithValue("@ID_Producto", idProducto);
+                            cmdUpdateStock.Parameters.AddWithValue("@ID_Producto", ID_Producto);
                             await cmdUpdateStock.ExecuteNonQueryAsync();
                         }
                     }
-                }
 
-                transaction.Commit();
-                return true;
+                    // Commit de la transacción
+                    transaction.Commit();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    // Rollback si ocurre algún error
+                    if (transaction != null)
+                    {
+                        transaction.Rollback();
+                    }
+                    Console.WriteLine($"Error al registrar la venta: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        public async Task<int?> ObtenerIDProductoPorNombreAsync(string nombreProducto)
+        {
+            int? idProducto = null;
+
+            // Verifica si el nombre del producto no está vacío
+            if (string.IsNullOrEmpty(nombreProducto))
+            {
+                Console.WriteLine("El nombre del producto no puede estar vacío.");
+                return null;
+            }
+
+            try
+            {
+                // Obtener la conexión de forma asíncrona
+                using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
+                {
+                    // Abre la conexión
+                    await connection.OpenAsync();
+
+                    // Consulta SQL para obtener el ID del producto basado en su nombre
+                    string query = "SELECT ID_Producto FROM Productos WHERE Nombre = @NombreProducto";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        // Agrega el parámetro
+                        cmd.Parameters.AddWithValue("@NombreProducto", nombreProducto);
+
+                        // Ejecuta la consulta y obtiene el ID
+                        object result = await cmd.ExecuteScalarAsync();
+
+                        if (result != null)
+                        {
+                            idProducto = Convert.ToInt32(result);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Producto no encontrado.");
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                if (transaction != null)
-                {
-                    transaction.Rollback();
-                }
-                Console.WriteLine($"Error al registrar la venta: {ex.Message}");
-                return false;
+                Console.WriteLine($"Error al obtener el ID del producto: {ex.Message}");
             }
+
+            return idProducto;
         }
+
+        //public async Task<bool> RegistrarVenta(int ID_Venta, DateTime Fecha, decimal Importe, decimal IVA, decimal Total, string Metodo_Pago, String ID_Cliente, List<Tuple<int, int, decimal>> detallesVenta)
+        //{
+        //    SqlTransaction transaction = null;
+
+
+        //    try
+        //    {
+        //        // Obtener la conexión de forma asíncrona
+        //        SqlConnection connection = await Utilidades.ObtenerConexionAsync();
+
+        //        // Abrir la conexión
+        //        await connection.OpenAsync();
+
+        //        // Iniciar la transacción
+        //        transaction = connection.BeginTransaction();
+
+        //        // Verificar la existencia del producto y su stock para cada detalle
+        //        foreach (var detalle in detallesVenta)
+        //        {
+        //            int ID_Producto = detalle.Item1;
+        //            int cantidadVendida = detalle.Item2;
+
+        //            string queryStock = "SELECT Cantidad_Disponible FROM Saldos WHERE ID_Producto = @ID_Producto";
+        //            using (SqlCommand cmdStock = new SqlCommand(queryStock, connection, transaction))
+        //            {
+        //                cmdStock.Parameters.AddWithValue("@ID_Producto", ID_Producto);
+        //                object result = await cmdStock.ExecuteScalarAsync();
+
+        //                if (result == null)
+        //                {
+        //                    Console.WriteLine($"No se encontró información de stock para el producto con ID {ID_Producto}");
+        //                    transaction.Rollback();
+        //                    return false;
+        //                }
+
+        //                decimal stockActual = Convert.ToDecimal(result);
+        //                if (stockActual < cantidadVendida)
+        //                {
+        //                    Console.WriteLine($"Stock insuficiente para el producto con ID {ID_Producto}. Stock actual: {stockActual}, Cantidad solicitada: {cantidadVendida}");
+        //                    transaction.Rollback();
+        //                    return false;
+        //                }
+        //            }
+        //        }
+
+        //        // Insertar la venta y obtener el ID generado
+        //        string queryVenta = "INSERT INTO Venta (Fecha, Importe, IVA, Total, Metodo_Pago, ID_Cliente) " +
+        //                            "VALUES (@Fecha, @Importe, @IVA, @Total, @Metodo_Pago, @ID_Cliente); " +
+        //                            "SELECT SCOPE_IDENTITY();";
+
+        //        using (SqlCommand cmdVenta = new SqlCommand(queryVenta, connection, transaction))
+        //        {
+        //            cmdVenta.Parameters.AddWithValue("@Fecha", Fecha);
+        //            cmdVenta.Parameters.AddWithValue("@Importe", Importe);
+        //            cmdVenta.Parameters.AddWithValue("@IVA", IVA);
+        //            cmdVenta.Parameters.AddWithValue("@Total", Total);
+        //            cmdVenta.Parameters.AddWithValue("@Metodo_Pago", Metodo_Pago);
+        //            cmdVenta.Parameters.AddWithValue("@ID_Cliente", ID_Cliente);
+
+        //            object result = await cmdVenta.ExecuteScalarAsync();
+        //            int idVentaGenerado = Convert.ToInt32(result);
+
+        //            // Insertar los detalles de la venta y actualizar el stock
+        //            foreach (var detalle in detallesVenta)
+        //            {
+        //                int idProducto = detalle.Item1;
+        //                int cantidadVendida = detalle.Item2;
+        //                decimal precioUnitario = detalle.Item3;
+        //                decimal subtotal = cantidadVendida * precioUnitario;
+
+        //                string queryDetalleVenta = "INSERT INTO Detalle_Venta (ID_Venta, ID_Producto, Cantidad, Precio_Unitario, Subtotal) " +
+        //                                           "VALUES (@ID_Venta, @ID_Producto, @Cantidad, @Precio_Unitario, @Subtotal)";
+        //                using (SqlCommand cmdDetalleVenta = new SqlCommand(queryDetalleVenta, connection, transaction))
+        //                {
+        //                    cmdDetalleVenta.Parameters.AddWithValue("@ID_Venta", idVentaGenerado);
+        //                    cmdDetalleVenta.Parameters.AddWithValue("@ID_Producto", idProducto);
+        //                    cmdDetalleVenta.Parameters.AddWithValue("@Cantidad", cantidadVendida);
+        //                    cmdDetalleVenta.Parameters.AddWithValue("@Precio_Unitario", precioUnitario);
+        //                    cmdDetalleVenta.Parameters.AddWithValue("@Subtotal", subtotal);
+        //                    await cmdDetalleVenta.ExecuteNonQueryAsync();
+        //                }
+
+        //                string queryUpdateStock = "UPDATE Saldos SET Cantidad_Salida = Cantidad_Salida + @Cantidad WHERE ID_Producto = @ID_Producto";
+        //                using (SqlCommand cmdUpdateStock = new SqlCommand(queryUpdateStock, connection, transaction))
+        //                {
+        //                    cmdUpdateStock.Parameters.AddWithValue("@Cantidad", cantidadVendida);
+        //                    cmdUpdateStock.Parameters.AddWithValue("@ID_Producto", idProducto);
+        //                    await cmdUpdateStock.ExecuteNonQueryAsync();
+        //                }
+        //            }
+        //        }
+
+        //        transaction.Commit();
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        if (transaction != null)
+        //        {
+        //            transaction.Rollback();
+        //        }
+        //        Console.WriteLine($"Error al registrar la venta: {ex.Message}");
+        //        return false;
+        //    }
+        //}
 
 
         private void ConfigurarDataGridView()
