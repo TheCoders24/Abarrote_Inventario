@@ -480,7 +480,8 @@ namespace Interfaz
             int ID_Venta = 0; // Generado automáticamente en la base de datos, o puedes capturarlo si ya lo tienes.
             DateTime Fecha = DateTime.Now; // O puedes tomarlo desde un control de fecha.
             decimal Importe = Convert.ToDecimal(txtimporte.Text);
-            decimal IVA = 10.5m; 
+            decimal IVA = 10.5m;
+            IVA = decimal.Parse(txtimporte.Text);
             // Intentar convertir el texto a decimal
             // Obtener el texto del TextBox
 
