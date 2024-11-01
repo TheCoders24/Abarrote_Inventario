@@ -29,24 +29,23 @@ namespace Interfaz
         }
 
 
-        public void MostrarDatos()
+        public async void MostrarDatos()
         {
             try
             {
-                var proveedores = NProveedores.MostrarProveedoresAsync();
-                if (proveedores != null)
+                var proveedores = await NProveedores.MostrarProveedoresAsync();
+                if (proveedores != null) // Verifica que haya datos
                 {
-                    dataListado.DataSource = NProveedores.MostrarProveedoresAsync();
-                    
+                    dataListado.DataSource = proveedores; // Asigna la lista al DataGridView
                 }
                 else
                 {
-                    MessageBox.Show("No Se Encontraron datos de proveedores");
+                    MessageBox.Show("No se encontraron datos de productos.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Sucedio un Error al Querer Mostrar los Datos" + ex);
+                MessageBox.Show("Sucedió un error al querer mostrar los datos: " + ex.Message);
             }
         }
 

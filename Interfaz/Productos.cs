@@ -26,19 +26,19 @@ namespace Interfaz
         {
             try
             {
-                var proveedores =await NProductos.MostrarProductosAsync();
-                if (proveedores != null)
+                var proveedores = await NProductos.MostrarProductosAsync();
+                if (proveedores != null) // Verifica que haya datos
                 {
-                    dataListado.DataSource = NProductos.MostrarProductosAsync();
+                    dataListado.DataSource = proveedores; // Asigna la lista al DataGridView
                 }
                 else
                 {
-                    MessageBox.Show("No Se Encontraron datos de productos");
+                    MessageBox.Show("No se encontraron datos de productos.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Sucedio un Error al Querer Mostrar los Datos" + ex);
+                MessageBox.Show("Sucedió un error al querer mostrar los datos: " + ex.Message);
             }
         }
 
@@ -90,6 +90,11 @@ namespace Interfaz
                 // Mostramos un mensaje si el ID no es válido
                 MessageBox.Show("El ID del Producto o del Proveedor no es válido");
             }
+
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
 
         }
     }

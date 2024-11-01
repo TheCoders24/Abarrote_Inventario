@@ -22,11 +22,34 @@ namespace Interfaz
             Fecha();
         }
 
-        private void Inventario_Load(object sender, EventArgs e)
+        private async void Inventario_Load(object sender, EventArgs e)
         {
-
+            await CargarDatosInventarioAsync();
         }
+        public async Task CargarDatosInventarioAsync()
+        {
+            string query = "SELECT [ID_Inventario], [Fecha_Registro], [Observaciones], [Importe], [IVA], [Total], [ID_Proveedor] FROM [AbarroteDB].[dbo].[Inventario]";
 
+            try
+            {
+                using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            DataTable dataTable = new DataTable();
+                            adapter.Fill(dataTable); // Llenar el DataTable con los datos de la consulta
+                            dataListado.DataSource = dataTable; // Asignar el DataTable al DataGridView
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Sucedió un error al cargar los datos: " + ex.Message);
+            }
+        }
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.Close();
