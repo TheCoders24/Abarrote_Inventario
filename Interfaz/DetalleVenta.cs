@@ -477,7 +477,70 @@ namespace Interfaz
             CargarDetallesVenta(nombreProducto, nombreCliente, cantidad, precioUnitario);
 
         }
+        /*ALTER PROCEDURE [dbo].[usp_RegistrarVenta]
+           @Fecha DATE,
+           @Importe DECIMAL(10, 2),
+           @Iva DECIMAL(10, 2),
+           @Total DECIMAL(10, 2),
+           @Metodo_Pago VARCHAR(50),
+           @ID_Cliente INT,
+           @ID_Producto INT,
+           @Cantidad INT,
+           @Precio_Unitario DECIMAL(10, 2),
+           @Resultado INT OUTPUT
+        AS
+        BEGIN
+           BEGIN TRY
+               -- Iniciar transacción
+               BEGIN TRANSACTION;
 
+               -- Insertar la venta en la tabla Venta
+               INSERT INTO Venta (Fecha, Importe, Iva, Total, Metodo_Pago, ID_Cliente)
+               VALUES (@Fecha, @Importe, @Iva, @Total, @Metodo_Pago, @ID_Cliente);
+
+               -- Obtener el ID de la venta recién insertada
+               DECLARE @ID_Venta INT;
+               SET @ID_Venta = SCOPE_IDENTITY();
+
+               -- Insertar los detalles de la venta en la tabla DetalleVenta
+               INSERT INTO DetalleVenta (ID_Venta, ID_Producto, Cantidad, Precio_Unitario, Subtotal)
+               VALUES 
+                   (@ID_Venta, @ID_Producto, @Cantidad, @Precio_Unitario, @Cantidad * @Precio_Unitario);
+
+               -- Verificar si hay suficiente inventario antes de actualizar
+               IF EXISTS (
+                   SELECT 1
+                   FROM Saldos
+                   WHERE ID_Producto = @ID_Producto
+                     AND (Cantidad_Entrante - Cantidad_Salida) >= @Cantidad
+               )
+               BEGIN
+                   -- Actualizar el inventario (tabla Saldos)
+                   UPDATE Saldos
+                   SET Cantidad_Salida = Cantidad_Salida + @Cantidad
+                   WHERE ID_Producto = @ID_Producto;
+
+                   -- Confirmar la transacción
+                   COMMIT;
+
+                   -- Devolver el ID de la venta registrada
+                   SET @Resultado = @ID_Venta;
+               END
+               ELSE
+               BEGIN
+                   -- Si no hay suficiente inventario, hacer rollback y devolver un error
+                   ROLLBACK;
+                   SET @Resultado = -1; -- Indica error por falta de inventario
+               END
+           END TRY
+           BEGIN CATCH
+               -- Si ocurre un error, revertir la transacción
+               ROLLBACK;
+
+               -- Indicar error devolviendo 0
+               SET @Resultado = 0;
+           END CATCH
+        END*/
         public async Task<bool> RegistrarVenta1(int ID_Venta, DateTime Fecha, decimal Importe, decimal IVA, decimal Total, string Metodo_Pago, int ID_Cliente, List<Tuple<int, int, decimal>> detallesVenta)
         {
             SqlTransaction transaction = null;
