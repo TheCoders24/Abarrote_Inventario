@@ -40,7 +40,54 @@ namespace Interfaz
         private async void Venta_Load(object sender, EventArgs e)
         {
             await CargarDatosVentasAsync();
+            //await CargarDatosVentasConDetallesAsync();
         }
+       
+        public async Task CargarDatosVentasConDetallesAsync()
+        {
+            string query = @"
+                SELECT 
+                    v.ID_Venta,
+                    v.Fecha,
+                    c.Nombre AS Nombre_Cliente,
+                    dv.Cantidad,
+                    p.Nombre AS Nombre_Producto,
+                    dv.Importe,
+                    dv.IVA,
+                    v.Total
+                FROM 
+                    Venta v
+                JOIN 
+                    Cliente c ON v.ID_Cliente = c.ID_Cliente
+                JOIN 
+                    DetalleVenta dv ON v.ID_Venta = dv.ID_Venta
+                JOIN 
+                    Producto p ON dv.ID_Producto = p.ID_Producto
+                ORDER BY 
+                    v.Fecha DESC;";
+
+            try
+            {
+                using (SqlConnection connection = await Utilidades.ObtenerConexionAsync())
+                {
+                    
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            DataTable dataTable = new DataTable();
+                            adapter.Fill(dataTable); // Llenar el DataTable con los datos de la consulta
+                            dataListado.DataSource = dataTable; // Asignar el DataTable al DataGridView
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Sucedió un error al cargar los datos: " + ex.Message);
+            }
+        }
+
 
         public async Task CargarDatosVentasAsync()
         {
