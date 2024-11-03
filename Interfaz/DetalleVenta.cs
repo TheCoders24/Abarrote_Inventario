@@ -572,7 +572,7 @@ namespace Interfaz
 
                             if (result == null)
                             {
-                                Console.WriteLine($"No se encontró información de stock para el producto con ID {ID_Producto}");
+                                MessageBox.Show($"No se encontró información de stock para el producto con ID {ID_Producto}");
                                 transaction.Rollback();
                                 return false;
                             }
@@ -580,7 +580,7 @@ namespace Interfaz
                             decimal stockActual = Convert.ToDecimal(result);
                             if (stockActual < cantidadVendida)
                             {
-                                Console.WriteLine($"Stock insuficiente para el producto con ID {ID_Producto}. Stock actual: {stockActual}, Cantidad solicitada: {cantidadVendida}");
+                                MessageBox.Show($"Stock insuficiente para el producto con ID {ID_Producto}. Stock actual: {stockActual}, Cantidad solicitada: {cantidadVendida}");
                                 transaction.Rollback();
                                 return false;
                             }
@@ -596,7 +596,7 @@ namespace Interfaz
 
                         if (existeCliente == 0)
                         {
-                            Console.WriteLine($"El ID_Cliente {ID_Cliente} no existe en la base de datos.");
+                            MessageBox.Show($"El ID_Cliente {ID_Cliente} no existe en la base de datos.");
                             transaction.Rollback();
                             return false; // Sal de la función si el cliente no existe
                         }
@@ -662,7 +662,7 @@ namespace Interfaz
                     {
                         transaction.Rollback();
                     }
-                    Console.WriteLine($"Error al registrar la venta: {ex.Message}");
+                    MessageBox.Show($"Error al registrar la venta: {ex.Message}");
                     return false;
                 }
             }
@@ -675,7 +675,7 @@ namespace Interfaz
             // Verifica si el nombre del producto no está vacío
             if (string.IsNullOrEmpty(nombreProducto))
             {
-                Console.WriteLine("El nombre del producto no puede estar vacío.");
+                MessageBox.Show("El nombre del producto no puede estar vacío.");
                 return null;
             }
 
